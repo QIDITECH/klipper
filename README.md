@@ -1,5 +1,5 @@
-<p align="center"><img src="other/QIDI.png" height="240" alt="QIDI's logo" /></p>
-<p align="center"><a href="/LICENSE"><img alt="GPL-V3.0 License" src="other/qidi.svg"></a></p>
+<p align="center"><img src="https://github.com/QIDITECH/QIDI_MAX3/blob/main/other/QIDI.png" height="240" alt="QIDI's logo" /></p>
+<p align="center"><a href="https://github.com/QIDITECH/QIDI_MAX3/blob/main/other/qidi.svg"><img alt="GPL-V3.0 License" src="other/qidi.svg"></a></p>
 
 # Document Instructions
 The 3D printers of QIDI are based on Klipper.Based on the Klipper open source project, we have made some modifications to its source code to meet some of the user's needs.At the same time, we have also made modifications to Moonraker, so that the screens we set can correspond to the operations on the page.
