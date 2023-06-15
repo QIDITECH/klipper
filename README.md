@@ -20,7 +20,7 @@ Thanks to the developers and maintainers of these open source projects.Please co
   klipper|/home/mks/
   moonraker|/home/mks/
 
-3. If there is no need to update Xindi, simply replace it. For example, if I replace the klipper folder, save it and restart it.
+3. If there is no need to update xindi, simply replace it. For example, if I replace the klipper folder, save it and restart it.
 
 ## Report Issues and Make Suggestions
 You can contact [After-Sales Service](https://qidi3d.com/pages/warranty-policy-after-sales-support) to report issues and make suggestions.
