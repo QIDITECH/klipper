@@ -51,7 +51,7 @@ class SensorBase:
                 self.oid, clock, self._report_clock,
                 self.min_sample_value, self.max_sample_value), is_init=True)
     def _handle_spi_response(self, params):
-        temp = self.calc_temp(params['value'], params['fault']) 
+        temp = self.calc_temp(params['value'], params['fault'])
         next_clock      = self.mcu.clock32_to_clock64(params['next_clock'])
         last_read_clock = next_clock - self._report_clock
         last_read_time  = self.mcu.clock_to_print_time(last_read_clock)
