@@ -12,12 +12,14 @@ If the probe did not move far enough to trigger, then
 consider reducing the Z axis minimum position so the probe
 can travel further (the Z minimum position can be negative).
 """
+_NERVER = 9999999
 
 class PrinterProbe:
     def __init__(self, config, mcu_probe):
         self.printer = config.get_printer()
         self.name = config.get_name()
         self.mcu_probe = mcu_probe
+        self.config = config
         self.speed = config.getfloat('speed', 5.0, above=0.)
         self.lift_speed = config.getfloat('lift_speed', self.speed, above=0.)
         self.x_offset = config.getfloat('x_offset', 0.)
@@ -28,6 +30,12 @@ class PrinterProbe:
         self.last_state = False
         self.last_z_result = 0.
         self.gcode_move = self.printer.load_object(config, "gcode_move")
+        # vibrate after retry failed 
+        gcode_macro = self.printer.load_object(config, 'gcode_macro')
+        self.vibrate_gcode = gcode_macro.load_template(
+             config.getsection('bed_mesh'), 'vibrate_gcode', '')
+        self.probe_count = 0
+        self.vibrate = config.getsection('bed_mesh').getint('vibrate', _NERVER)
         # Infer Z position to move to during a probe
         if config.has_section('stepper_z'):
             zconfig = config.getsection('stepper_z')
@@ -74,6 +82,8 @@ class PrinterProbe:
         self.gcode.register_command('Z_OFFSET_APPLY_PROBE',
                                     self.cmd_Z_OFFSET_APPLY_PROBE,
                                     desc=self.cmd_Z_OFFSET_APPLY_PROBE_help)
+        self.gcode.register_command('MKS_SHOW_Z_OFFSET', self.cmd_MKS_SHOW_Z_OFFSET,
+                                    desc=self.cmd_MKS_SHOW_Z_OFFSET_help)
     def _handle_homing_move_begin(self, hmove):
         if self.mcu_probe in hmove.get_mcu_endstops():
             self.mcu_probe.probe_prepare(hmove)
@@ -169,6 +179,8 @@ class PrinterProbe:
         probexy = self.printer.lookup_object('toolhead').get_position()[:2]
         retries = 0
         positions = []
+        gcode = self.gcode
+        last_probe_failed = False
         while len(positions) < sample_count:
             # Probe position
             pos = self._probe(speed)
@@ -179,11 +191,27 @@ class PrinterProbe:
                 if retries >= samples_retries:
                     raise gcmd.error("Probe samples exceed samples_tolerance")
                 gcmd.respond_info("Probe samples exceed tolerance. Retrying...")
+                last_probe_failed = True
                 retries += 1
                 positions = []
+                self.probe_count += 1
             # Retract
             if len(positions) < sample_count:
-                self._move(probexy + [pos[2] + sample_retract_dist], lift_speed)
+                if last_probe_failed:
+                    self._move(probexy + [sample_retract_dist * 2], lift_speed)
+                    if self.probe_count != 0 and self.probe_count % self.vibrate == 0:
+                        gcode.respond_info('Probe ' + str(self.probe_count) + " times, start vibrating")
+                        commands = [
+                            'G91',
+                            'G1 Z20 F300',
+                            'G90',
+                            'G1 Z10 F300'
+                        ]
+                        gcode._process_commands(commands, False)
+                        self.vibrate_gcode.run_gcode_from_command()
+                    last_probe_failed = False
+                else:
+                    self._move(probexy + [pos[2] + sample_retract_dist], lift_speed)
         if must_notify_multi_probe:
             self.multi_probe_end()
         # Calculate and return result
@@ -274,8 +302,7 @@ class PrinterProbe:
         # Move the nozzle over the probe point
         curpos[0] += self.x_offset
         curpos[1] += self.y_offset
-        #PwAddNew
-        self._move(curpos,80.)
+        self._move(curpos, self.speed)
         # Start manual probe
         manual_probe.ManualProbeHelper(self.printer, gcmd,
                                        self.probe_calibrate_finalize)
@@ -293,6 +320,14 @@ class PrinterProbe:
                 % (self.name, new_calibrate))
             configfile.set(self.name, 'z_offset', "%.3f" % (new_calibrate,))
     cmd_Z_OFFSET_APPLY_PROBE_help = "Adjust the probe's z_offset"
+    def cmd_MKS_SHOW_Z_OFFSET(self, gcmd):
+        offset = self.gcode_move.get_status()['homing_origin'].z
+        if offset == 0:
+            self.gcode.respond_info("Nothing to do: Z Offset is 0")
+        else:
+            new_calibrate = self.z_offset - offset
+            self.gcode.respond_info(" %s: z_offset: %.3f\n" % (self.name, new_calibrate))
+    cmd_MKS_SHOW_Z_OFFSET_help = "Show the probe's z_offset"
 
 # Endstop wrapper that enables probe specific features
 class ProbeEndstopWrapper:
@@ -382,6 +417,11 @@ class ProbePointsHelper:
         self.lift_speed = self.speed
         self.probe_offsets = (0., 0., 0.)
         self.results = []
+        # vibrate 
+        self.vibrate = config.getint('vibrate', 9999999)
+        gcode_macro = self.printer.load_object(config, 'gcode_macro')
+        self.vibrate_gcode = gcode_macro.load_template(
+            config, 'vibrate_gcode', '')
     def minimum_points(self,n):
         if len(self.probe_points) < n:
             raise self.printer.config_error(
@@ -434,11 +474,23 @@ class ProbePointsHelper:
             raise gcmd.error("horizontal_move_z can't be less than"
                              " probe's z_offset")
         probe.multi_probe_begin()
+        probe.probe_count = 0
         while 1:
             done = self._move_next()
             if done:
                 break
+            if self.gcode.break_flag:
+                break
             pos = probe.run_probe(gcmd)
+            probe.probe_count += 1
+            gcode = self.printer.lookup_object('gcode')
+            if self.vibrate and probe.probe_count % self.vibrate == 0:
+                commands = [
+                    'G90',
+                    'G1 Z'+ str(self.horizontal_move_z) + ' F300'
+                ]
+                gcode._process_commands(commands, False)
+                self.vibrate_gcode.run_gcode_from_command()
             self.results.append(pos)
         probe.multi_probe_end()
     def _manual_probe_start(self):

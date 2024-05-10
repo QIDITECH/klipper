@@ -90,6 +90,19 @@ class Printer:
             raise self.config_error(
                 "Printer object '%s' already created" % (name,))
         self.objects[name] = obj
+    def remove_object(self, name):
+        if name not in self.objects:
+            raise self.config_error("Printer object '%s' not found" % (name,))
+        del self.objects[name]
+    def swap_object(self, name1, name2):
+        if name1 not in self.objects or name2 not in self.objects:
+            raise self.config_error("Printer object '%s' or '%s' not found" % (name1, name2))
+        self.objects[name1], self.objects[name2] = self.objects[name2], self.objects[name1]
+    def copy_object(self, name, new_name):
+        if name not in self.objects:
+            raise self.config_error("Object '%s' not found" % name)
+        new_obj = self.objects[name]
+        self.objects[new_name] = new_obj
     def lookup_object(self, name, default=configfile.sentinel):
         if name in self.objects:
             return self.objects[name]
@@ -129,6 +142,11 @@ class Printer:
             raise self.config_error("Unable to load module '%s'" % (section,))
         self.objects[section] = init_func(config.getsection(section))
         return self.objects[section]
+    def unload_object(self, section):
+        if section in self.objects:
+            del self.objects[section]
+        else:
+            raise self.config_error("Object '%s' not found" % section)
     def _read_config(self):
         self.objects['configfile'] = pconfig = configfile.PrinterConfig(self)
         config = pconfig.read_main_config()

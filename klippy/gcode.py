@@ -9,6 +9,11 @@ class CommandError(Exception):
     pass
 
 Coord = collections.namedtuple('Coord', ('x', 'y', 'z', 'e'))
+priority_queue = []
+set_gcode_offset_r = re.compile(
+    r'^\s*SET_GCODE_OFFSET(?:\s+[a-zA-Z_]+=[+-]?\d*\.?\d+)*\s+MOVE=1(?:\s+[a-zA-Z_]+=[+-]?\d*\.?\d+)*(?:\s|$)',
+    re.IGNORECASE
+    )
 
 class GCodeCommand:
     error = CommandError
@@ -111,6 +116,8 @@ class GCodeDispatch:
             func = getattr(self, 'cmd_' + cmd)
             desc = getattr(self, 'cmd_' + cmd + '_help', None)
             self.register_command(cmd, func, True, desc)
+        # Gcode macro interupt
+        self.break_flag=False
     def is_traditional_gcode(self, cmd):
         # A "traditional" g-code command is a letter and followed by a number
         try:
@@ -138,6 +145,13 @@ class GCodeDispatch:
             self.base_gcode_handlers[cmd] = func
         if desc is not None:
             self.gcode_help[cmd] = desc
+    def remove_command(self, cmd):
+        if cmd in self.ready_gcode_handlers:
+            del self.ready_gcode_handlers[cmd]
+            if cmd in self.base_gcode_handlers:
+                del self.base_gcode_handlers[cmd]
+        else:
+            raise self.printer.config_error("Gcode command '%s' not registered" % cmd)
     def register_mux_command(self, cmd, key, value, func, desc=None):
         prev = self.mux_commands.get(cmd)
         if prev is None:
@@ -176,6 +190,45 @@ class GCodeDispatch:
         for line in commands:
             # Ignore comments and leading/trailing spaces
             line = origline = line.strip()
+            # Gcode macro interupt
+            if self.break_flag:
+                if str(line) != "CANCEL_PRINT":
+                    continue
+                else:
+                    self.break_flag = False
+                    self.printer.lookup_object("heaters").break_flag = False
+            while priority_queue:
+                priority_command = priority_queue.pop(0)
+                # self.respond_info("priority: {}".format(priority_command))
+                cpos = priority_command.find(';')
+                if cpos >= 0:
+                    priority_command = priority_command[:cpos]
+                parts = self.args_r.split(priority_command.upper())
+                numparts = len(parts)
+                cmd = ""
+                if numparts >= 3 and parts[1] != 'N':
+                    cmd = parts[1] + parts[2].strip()
+                elif numparts >= 5 and parts[1] == 'N':
+                    cmd = parts[3] + parts[4].strip()
+                params = { parts[i]: parts[i+1].strip()
+                        for i in range(1, numparts, 2) }
+                gcmd = GCodeCommand(self, cmd, priority_command, params, need_ack)
+                handler = self.gcode_handlers.get(cmd, self.cmd_default)
+                try:
+                    handler(gcmd)
+                except self.error as e:
+                    self._respond_error(str(e))
+                    self.printer.send_event("gcode:command_error")
+                    if not need_ack:
+                        raise
+                except:
+                    msg = 'Internal error on command:"%s"' % (cmd,)
+                    logging.exception(msg)
+                    self.printer.invoke_shutdown(msg)
+                    self._respond_error(msg)
+                    if not need_ack:
+                        raise
+                gcmd.ack() 
             cpos = line.find(';')
             if cpos >= 0:
                 line = line[:cpos]
@@ -212,8 +265,16 @@ class GCodeDispatch:
     def run_script_from_command(self, script):
         self._process_commands(script.split('\n'), need_ack=False)
     def run_script(self, script):
+        lines = script.split('\n')
+        temp_lines = []
+        for line in lines:
+            if set_gcode_offset_r.match(line) is not None:
+                priority_queue.append(line)
+            else:
+                temp_lines.append(line)
+        lines = temp_lines
         with self.mutex:
-            self._process_commands(script.split('\n'), need_ack=False)
+            self._process_commands(lines, need_ack=False)
     def get_mutex(self):
         return self.mutex
     def create_gcode_command(self, command, commandline, params):

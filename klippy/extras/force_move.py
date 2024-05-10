@@ -32,6 +32,7 @@ class ForceMove:
     def __init__(self, config):
         self.printer = config.get_printer()
         self.steppers = {}
+        self._enable = config.getboolean("enable_force_move", False)
         # Setup iterative solver
         ffi_main, ffi_lib = chelper.get_ffi()
         self.trapq = ffi_main.gc(ffi_lib.trapq_alloc(), ffi_lib.trapq_free)
@@ -44,8 +45,8 @@ class ForceMove:
         gcode.register_command('STEPPER_BUZZ', self.cmd_STEPPER_BUZZ,
                                desc=self.cmd_STEPPER_BUZZ_help)
         gcode.register_command('SET_KINEMATIC_POSITION',
-                                   self.cmd_SET_KINEMATIC_POSITION,
-                                   desc=self.cmd_SET_KINEMATIC_POSITION_help)
+                                self.cmd_SET_KINEMATIC_POSITION,
+                                desc=self.cmd_SET_KINEMATIC_POSITION_help)
         if config.getboolean("enable_force_move", False):
             gcode.register_command('FORCE_MOVE', self.cmd_FORCE_MOVE,
                                    desc=self.cmd_FORCE_MOVE_help)
@@ -113,16 +114,18 @@ class ForceMove:
         self._restore_enable(stepper, was_enable)
     cmd_FORCE_MOVE_help = "Manually move a stepper; invalidates kinematics"
     def cmd_FORCE_MOVE(self, gcmd):
-        stepper = self._lookup_stepper(gcmd)
-        distance = gcmd.get_float('DISTANCE')
-        speed = gcmd.get_float('VELOCITY', above=0.)
-        accel = gcmd.get_float('ACCEL', 0., minval=0.)
-        logging.info("FORCE_MOVE %s distance=%.3f velocity=%.3f accel=%.3f",
-                     stepper.get_name(), distance, speed, accel)
-        self._force_enable(stepper)
-        self.manual_move(stepper, distance, speed, accel)
+        if self._enable:
+            stepper = self._lookup_stepper(gcmd)
+            distance = gcmd.get_float('DISTANCE')
+            speed = gcmd.get_float('VELOCITY', above=0.)
+            accel = gcmd.get_float('ACCEL', 0., minval=0.)
+            logging.info("FORCE_MOVE %s distance=%.3f velocity=%.3f accel=%.3f",
+                        stepper.get_name(), distance, speed, accel)
+            self._force_enable(stepper)
+            self.manual_move(stepper, distance, speed, accel)
     cmd_SET_KINEMATIC_POSITION_help = "Force a low-level kinematic position"
     def cmd_SET_KINEMATIC_POSITION(self, gcmd):
+#        if self._enable:
         toolhead = self.printer.lookup_object('toolhead')
         toolhead.get_last_move_time()
         curpos = toolhead.get_position()
@@ -131,7 +134,6 @@ class ForceMove:
         z = gcmd.get_float('Z', curpos[2])
         logging.info("SET_KINEMATIC_POSITION pos=%.3f,%.3f,%.3f", x, y, z)
         toolhead.set_position([x, y, z, curpos[3]], homing_axes=(0, 1, 2))
-    
 
 def load_config(config):
     return ForceMove(config)

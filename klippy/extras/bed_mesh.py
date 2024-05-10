@@ -305,6 +305,10 @@ class BedMeshCalibrate:
         self.gcode.register_command(
             'BED_MESH_CALIBRATE', self.cmd_BED_MESH_CALIBRATE,
             desc=self.cmd_BED_MESH_CALIBRATE_help)
+        self.gcode.register_command(
+            'ADD_Z_OFFSET_TO_BED_MESH',
+            self.cmd_ADD_Z_OFFSET_TO_BED_MESH,
+            desc=self.cmd_ADD_Z_OFFSET_TO_BED_MESH_help)
     def _generate_points(self, error):
         x_cnt = self.mesh_config['x_count']
         y_cnt = self.mesh_config['y_count']
@@ -604,6 +608,19 @@ class BedMeshCalibrate:
         self.bedmesh.set_mesh(None)
         self.update_config(gcmd)
         self.probe_helper.start_probe(gcmd)
+
+    cmd_ADD_Z_OFFSET_TO_BED_MESH_help = "Add Z Offset To Current Bed Mesh"
+
+    def cmd_ADD_Z_OFFSET_TO_BED_MESH(self, gcmd):
+        zOffset = gcmd.get_float('ZOFFSET', 0)
+        bed_mesh_pmgr = self.bedmesh.pmgr
+        matrix = self.bedmesh.get_mesh().get_probed_matrix()
+        for row in range(len(matrix)):
+            for col in range(len(matrix[row])):
+                matrix[row][col] += zOffset
+        self.bedmesh.get_mesh().build_mesh(matrix)
+        bed_mesh_pmgr.save_profile(bed_mesh_pmgr.current_profile)
+    
     def probe_finalize(self, offsets, positions):
         x_offset, y_offset, z_offset = offsets
         positions = [[round(p[0], 2), round(p[1], 2), p[2]]
@@ -1135,6 +1152,7 @@ class ProfileManager:
         self.gcode.register_command(
             'BED_MESH_PROFILE', self.cmd_BED_MESH_PROFILE,
             desc=self.cmd_BED_MESH_PROFILE_help)
+
     def initialize(self):
         self._check_incompatible_profiles()
         if "default" in self.profiles:

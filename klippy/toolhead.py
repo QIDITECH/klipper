@@ -4,6 +4,7 @@
 #
 # This file may be distributed under the terms of the GNU GPLv3 license.
 import math, logging, importlib
+from pickle import NONE
 import mcu, chelper, kinematics.extruder
 
 # Common suffixes: _d is distance (in mm), _v is velocity (in
@@ -223,7 +224,7 @@ class ToolHead:
         self.buffer_time_low = config.getfloat(
             'buffer_time_low', 1.000, above=0.)
         self.buffer_time_high = config.getfloat(
-            'buffer_time_high', 2.000, above=self.buffer_time_low)
+            'buffer_time_high', 10.000, above=self.buffer_time_low)
         self.buffer_time_start = config.getfloat(
             'buffer_time_start', 0.250, above=0.)
         self.move_flush_time = config.getfloat(
@@ -268,12 +269,44 @@ class ToolHead:
         gcode.register_command('SET_VELOCITY_LIMIT',
                                self.cmd_SET_VELOCITY_LIMIT,
                                desc=self.cmd_SET_VELOCITY_LIMIT_help)
+        # Change z velocity
+        gcode.register_command('SET_Z_VELOCITY_LIMIT',
+                                self.cmd_SET_Z_VELOCITY_LIMIT,
+                               desc=self.cmd_SET_Z_VELOCITY_LIMIT_help)
+        gcode.register_command('SET_Z_ACCEL_LIMIT',
+                                self.cmd_SET_Z_ACCEL_LIMIT,
+                                desc=self.cmd_SET_Z_ACCEL_LIMIT_help)
+        
         gcode.register_command('M204', self.cmd_M204)
         # Load some default modules
         modules = ["gcode_move", "homing", "idle_timeout", "statistics",
                    "manual_probe", "tuning_tower"]
         for module_name in modules:
             self.printer.load_object(config, module_name)
+
+    # Change z velocity
+    cmd_SET_Z_VELOCITY_LIMIT_help = "Change z velocity limit, parameter VALUE"
+    def cmd_SET_Z_VELOCITY_LIMIT(self, gcmd):
+        kin = self.get_kinematics()
+        value = gcmd.get_float('VALUE', None, above=0.)
+        # gcmd.respond_info('Z velocity before change: ' + str(kin.max_z_velocity))
+        if value:
+            kin.max_z_velocity = value
+        else:
+            gcmd.respond_info("Value given is illegal")
+        # gcmd.respond_info('Z velocity after change: ' + str(kin.max_z_velocity))
+
+    cmd_SET_Z_ACCEL_LIMIT_help = "Change z accel, parameter VALUE"
+    def cmd_SET_Z_ACCEL_LIMIT(self, gcmd):
+        kin = self.get_kinematics()
+        value = gcmd.get_float('VALUE', None, above=0.)
+        # gcmd.respond_info('Z accel before change: ' + str(kin.max_z_accel))
+        if value:
+            kin.max_z_accel = value
+        else:
+            gcmd.respond_info("Value given is illegal")
+        # gcmd.respond_info('Z accel after change: ' + str(kin.max_z_accel))
+        
     # Print time tracking
     def _update_move_time(self, next_print_time):
         batch_time = MOVE_BATCH_TIME

@@ -228,6 +228,10 @@ class PrinterHoming:
         # Register g-code commands
         gcode = self.printer.lookup_object('gcode')
         gcode.register_command('G28', self.cmd_G28)
+        # 2023/12/14
+        gcode_macro = self.printer.load_object(config, 'gcode_macro')
+        self.vibrate_gcode = gcode_macro.load_template(
+             config.getsection('bed_mesh'), 'vibrate_gcode', '')
     def manual_home(self, toolhead, endstops, pos, speed,
                     triggered, check_triggered):
         hmove = HomingMove(self.printer, endstops, toolhead)
@@ -250,8 +254,14 @@ class PrinterHoming:
                     "Probing failed due to printer shutdown")
             raise
         if hmove.check_no_movement() is not None:
-            raise self.printer.command_error(
-                "Probe triggered prior to movement")
+            # 2023/12/14 Chengwei
+            # error to info
+            gcode = self.printer.lookup_object('gcode')
+            gcode.respond_info('Probe triggered prior to movement')
+            ######
+            # raise self.printer.command_error(
+            #     "Probe triggered prior to movement")
+            ######
         return epos
     def cmd_G28(self, gcmd):
         # Move to origin
