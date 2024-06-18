@@ -30,9 +30,11 @@ class VirtualSD:
         gcode_macro = self.printer.load_object(config, 'gcode_macro')
         self.on_error_gcode = gcode_macro.load_template(
             config, 'on_error_gcode', '')
+        
         # power lose resume
         self.lines = 0
         self.save_every_n_lines = 50
+        
         # Register commands
         self.gcode = self.printer.lookup_object('gcode')
         for cmd in ['M20', 'M21', 'M23', 'M24', 'M25', 'M26', 'M27']:
@@ -236,20 +238,30 @@ class VirtualSD:
         partial_input = ""
         lines = []
         error_message = None
-        plr_file = open("/home/mks/scripts/plr/plr_record", 'w', buffering=0)
+
+        # Recreate the file to balance the wear on the eMMC
+        file_path = "/home/mks/scripts/plr/plr_record"
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        plr_file = open(file_path, 'w', buffering=0)
+
         while not self.must_pause_work:
             if not lines:
                 # Read more data
                 try:
                     data = self.current_file.read(8192)
                 except:
+
                     plr_file.close()
+
                     logging.exception("virtual_sdcard read")
                     break
                 if not data:
                     # End of file
+
                     self.lines = 0
                     plr_file.close()
+
                     self.current_file.close()
                     self.current_file = None
                     logging.info("Finished SD card print")
@@ -271,13 +283,13 @@ class VirtualSD:
             next_file_position = self.file_position + len(line) + 1
             self.next_file_position = next_file_position
             try:
+
                 self.lines += 1
                 if self.lines % self.save_every_n_lines == 0:
-                    # temp = "SAVE_VARIABLE VARIABLE=gcode_lines VALUE=" + str(self.lines)
-                    # self.gcode._process_commands([temp], need_ack=False)
                     plr_file.seek(0)
                     plr_file.write(str(self.lines))
                     plr_file.truncate()
+
                 self.gcode.run_script(line)
             except self.gcode.error as e:
                 error_message = str(e)
@@ -302,7 +314,9 @@ class VirtualSD:
                 lines = []
                 partial_input = ""
         logging.info("Exiting SD card print (position %d)", self.file_position)
+
         plr_file.close()
+
         self.work_timer = None
         self.cmd_from_sd = False
         if error_message is not None:
@@ -312,16 +326,6 @@ class VirtualSD:
         else:
             self.print_stats.note_complete()
         return self.reactor.NEVER
-    # cmd_TOGGLE_PLR_help = "enable or disable power lose resume"
-    # def cmd_TOGGLE_PLR(self, gcmd):
-    #     if self.plr_enable:
-    #         self.plr_enable = False
-    #         temp = "SAVE_VARIABLE VARIABLE=plr_enable VALUE=" + str(self.plr_enable)
-    #         self.gcode._process_commands([temp], need_ack=False)
-    #         gcmd.respond_raw("Power lose resume disabled")
-    #     else:
-    #         self.plr_enable = True
-    #         gcmd.respond_raw("Power lose resume enabled")
 
 def load_config(config):
     return VirtualSD(config)

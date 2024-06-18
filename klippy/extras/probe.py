@@ -33,7 +33,7 @@ class PrinterProbe:
         # vibrate after retry failed 
         gcode_macro = self.printer.load_object(config, 'gcode_macro')
         self.vibrate_gcode = gcode_macro.load_template(
-             config.getsection('bed_mesh'), 'vibrate_gcode', '')
+            config.getsection('bed_mesh'), 'vibrate_gcode', '')
         self.probe_count = 0
         self.vibrate = config.getsection('bed_mesh').getint('vibrate', _NERVER)
         # Infer Z position to move to during a probe
@@ -49,7 +49,7 @@ class PrinterProbe:
         self.sample_count = config.getint('samples', 1, minval=1)
         self.sample_retract_dist = config.getfloat('sample_retract_dist', 2.,
                                                    above=0.)
-        atypes = {'median': 'median', 'average': 'average'}
+        atypes = {'median': 'median', 'average': 'average',"submaxmin":"submaxmin"}
         self.samples_result = config.getchoice('samples_result', atypes,
                                                'average')
         self.samples_tolerance = config.getfloat('samples_tolerance', 0.100,
@@ -177,6 +177,7 @@ class PrinterProbe:
         if must_notify_multi_probe:
             self.multi_probe_begin()
         probexy = self.printer.lookup_object('toolhead').get_position()[:2]
+        start_z = self.printer.lookup_object('toolhead').get_position()[2]
         retries = 0
         positions = []
         gcode = self.gcode
@@ -189,7 +190,15 @@ class PrinterProbe:
             z_positions = [p[2] for p in positions]
             if max(z_positions) - min(z_positions) > samples_tolerance:
                 if retries >= samples_retries:
-                    raise gcmd.error("Probe samples exceed samples_tolerance")
+                    #raise gcmd.error("Probe samples exceed samples_tolerance")
+                    self._move(probexy + [start_z], lift_speed)
+                    commands = [
+                            'Z_DOUDONG',
+                            'G4 P500',
+                    ]
+                    gcode._process_commands(commands, False)
+                    retries=0
+                    positions = []
                 gcmd.respond_info("Probe samples exceed tolerance. Retrying...")
                 last_probe_failed = True
                 retries += 1
@@ -197,8 +206,8 @@ class PrinterProbe:
                 self.probe_count += 1
             # Retract
             if len(positions) < sample_count:
+                self._move(probexy + [pos[2] + sample_retract_dist], lift_speed)
                 if last_probe_failed:
-                    self._move(probexy + [sample_retract_dist * 2], lift_speed)
                     if self.probe_count != 0 and self.probe_count % self.vibrate == 0:
                         gcode.respond_info('Probe ' + str(self.probe_count) + " times, start vibrating")
                         commands = [
@@ -210,13 +219,16 @@ class PrinterProbe:
                         gcode._process_commands(commands, False)
                         self.vibrate_gcode.run_gcode_from_command()
                     last_probe_failed = False
-                else:
-                    self._move(probexy + [pos[2] + sample_retract_dist], lift_speed)
         if must_notify_multi_probe:
             self.multi_probe_end()
         # Calculate and return result
         if samples_result == 'median':
             return self._calc_median(positions)
+        if samples_result == 'submaxmin':
+            z_sorted = sorted(positions, key=(lambda p: p[2]))
+            if len(positions)>=3:
+                z_sorted=z_sorted[1:-1]
+            return self._calc_mean(z_sorted)
         return self._calc_mean(positions)
     cmd_PROBE_help = "Probe Z-height at current XY position"
     def cmd_PROBE(self, gcmd):
@@ -421,7 +433,7 @@ class ProbePointsHelper:
         self.vibrate = config.getint('vibrate', 9999999)
         gcode_macro = self.printer.load_object(config, 'gcode_macro')
         self.vibrate_gcode = gcode_macro.load_template(
-            config, 'vibrate_gcode', '')
+            config.getsection('bed_mesh'), 'vibrate_gcode', '')
     def minimum_points(self,n):
         if len(self.probe_points) < n:
             raise self.printer.config_error(
