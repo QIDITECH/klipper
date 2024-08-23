@@ -129,6 +129,11 @@ class PrinterPins:
             raise error("Duplicate chip name '%s'" % (chip_name,))
         self.chips[chip_name] = chip
         self.pin_resolvers[chip_name] = PinResolver()
+    def remove_chip(self, chip_name):
+        if chip_name not in self.chips:
+            raise error("Chip '%s' not found" % (chip_name,))
+        del self.chips[chip_name]
+        del self.pin_resolvers[chip_name]
     def allow_multi_use_pin(self, pin_desc):
         pin_params = self.parse_pin(pin_desc)
         share_name = "%s:%s" % (pin_params['chip_name'], pin_params['pin'])
