@@ -124,6 +124,7 @@ class HallFilamentWidthSensor:
         # Update filament array for lastFilamentWidthReading
         self.update_filament_array(last_epos)
         # Check runout
+        # self.gcode.respond_info("Check diameter: {}".format(self.diameter))
         self.runout_helper.note_filament_present(
             self.diameter > self.runout_dia)
         # Does filament exists
@@ -134,23 +135,23 @@ class HallFilamentWidthSensor:
                 if pending_position <= last_epos:
                     # Get first item in filament_array queue
                     item = self.filament_array.pop(0)
-                    self.filament_width = item[1]
-                else:
-                    if ((self.use_current_dia_while_delay)
-                        and (self.firstExtruderUpdatePosition
-                             == pending_position)):
-                        self.filament_width = self.diameter
-                    elif  self.firstExtruderUpdatePosition == pending_position:
-                        self.filament_width = self.nominal_filament_dia
-                if ((self.filament_width <= self.max_diameter)
-                    and (self.filament_width >= self.min_diameter)):
-                    percentage = round(self.nominal_filament_dia**2
-                                       / self.filament_width**2 * 100)
-                    self.gcode.run_script("M221 S" + str(percentage))
-                else:
-                    self.gcode.run_script("M221 S100")
+                #     self.filament_width = item[1]
+                # else:
+                #     if ((self.use_current_dia_while_delay)
+                #         and (self.firstExtruderUpdatePosition
+                #              == pending_position)):
+                #         self.filament_width = self.diameter
+                #     elif  self.firstExtruderUpdatePosition == pending_position:
+                #         self.filament_width = self.nominal_filament_dia
+                # if ((self.filament_width <= self.max_diameter)
+                #     and (self.filament_width >= self.min_diameter)):
+                #     percentage = round(self.nominal_filament_dia**2
+                #                        / self.filament_width**2 * 100)
+                    # self.gcode.run_script("M221 S" + str(percentage))
+                # else:
+                    # self.gcode.run_script("M221 S100")
         else:
-            self.gcode.run_script("M221 S100")
+            # self.gcode.run_script("M221 S100")
             self.filament_array = []
 
         if self.is_active:
@@ -171,7 +172,7 @@ class HallFilamentWidthSensor:
         self.filament_array = []
         gcmd.respond_info("Filament width measurements cleared!")
         # Set extrude multiplier to 100%
-        self.gcode.run_script_from_command("M221 S100")
+        # self.gcode.run_script_from_command("M221 S100")
 
     def cmd_M405(self, gcmd):
         response = "Filament width sensor Turned On"
@@ -196,7 +197,7 @@ class HallFilamentWidthSensor:
             # Clear filament array
             self.filament_array = []
             # Set extrude multiplier to 100%
-            self.gcode.run_script_from_command("M221 S100")
+            # self.gcode.run_script_from_command("M221 S100")
         gcmd.respond_info(response)
 
     def cmd_Get_Raw_Values(self, gcmd):

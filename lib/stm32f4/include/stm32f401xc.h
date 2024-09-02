@@ -3825,306 +3825,212 @@ typedef struct
 #define PWR_CR_FPDS            PWR_CR_FPDS_Msk                                 /*!< Flash power down in Stop mode                              */
 #define PWR_CR_LPLVDS_Pos      (10U)                                           
 #define PWR_CR_LPLVDS_Msk      (0x1UL << PWR_CR_LPLVDS_Pos)                     /*!< 0x00000400 */
-#define PWR_CR_LPLVDS          PWR_CR_LPLVDS_Msk                               /*!< Low Power Regulator Low Voltage in Deep Sleep mode         */
-#define PWR_CR_MRLVDS_Pos      (11U)                                           
-#define PWR_CR_MRLVDS_Msk      (0x1UL << PWR_CR_MRLVDS_Pos)                     /*!< 0x00000800 */
-#define PWR_CR_MRLVDS          PWR_CR_MRLVDS_Msk                               /*!< Main Regulator Low Voltage in Deep Sleep mode              */
-#define PWR_CR_ADCDC1_Pos      (13U)                                           
-#define PWR_CR_ADCDC1_Msk      (0x1UL << PWR_CR_ADCDC1_Pos)                     /*!< 0x00002000 */
-#define PWR_CR_ADCDC1          PWR_CR_ADCDC1_Msk                               /*!< Refer to AN4073 on how to use this bit                     */ 
-#define PWR_CR_VOS_Pos         (14U)                                           
-#define PWR_CR_VOS_Msk         (0x3UL << PWR_CR_VOS_Pos)                        /*!< 0x0000C000 */
-#define PWR_CR_VOS             PWR_CR_VOS_Msk                                  /*!< VOS[1:0] bits (Regulator voltage scaling output selection) */
-#define PWR_CR_VOS_0           0x00004000U                                     /*!< Bit 0 */
-#define PWR_CR_VOS_1           0x00008000U                                     /*!< Bit 1 */
+#define PWR_CR_LPLVDS          PWR_CR_LPLVDS_Msk            B
+    ”gƒV¥  „               @   s∆   d Z d†° ZdZddlmZmZ G ddÑ dÉZdddd	údd
+dd	úd
+d
+dd	údddd	údddd	úgZddÑ Z	ddÑ Z
+edkr¬dZx@eD ]8Zeed É†	ed °Zeed É†	ed °Zed7 ZqÜW dS )z
+Arciv Stream  ciphering
+zArcIV encode decodez1.0È    )⁄	isUnicode⁄isPy3c               @   s>   e Zd ZdZddÑ ZddÑ ZddÑ Zer2dd	Ñ Znd
+d	Ñ ZdS )⁄ArcIVz‚
+	performs 'ArcIV' Stream Encryption of S using key
+	Based on what is widely thought to be RSA's ArcIV algorithm.
+	It produces output streams that are identical.
 
-/* Legacy define */
-#define  PWR_CR_PMODE                        PWR_CR_VOS
+	NB there is no separate decoder arciv(arciv(s,key),key) == s
+	c             C   s   || _ | †°  d S )N)⁄_key⁄reset)⁄self⁄key© r	   ˙5/usr/lib/python3/dist-packages/reportlab/lib/arciv.py⁄__init__   s    zArcIV.__init__c             C   sË   | j }t|Ér|†d°}ttdÉÉ}ttdÉÉ}t|É}tr`xH|D ]}|||  d ||< qBW n&x$|D ]}t|||  Éd ||< qfW d}xBtdÉD ]6}|||  ||  d }|| ||  ||< ||< qîW |dd  | _| _	| _
+dS )z&restore the cipher to it's start state⁄utf8È   r   N)r   r   ⁄encode⁄list⁄range⁄lenr   ⁄ord⁄_sbox⁄_i⁄_j)r   r   ⁄sbox⁄kZlk⁄i⁄jr	   r	   r
+   r      s      
+
+
+zArcIV.resetc             C   s  | j | j| j  }}}trRt|tÉr2t|†d°Ént|tÉrDt|Én
+|ddÖ }n:t|t	ÉrÄtt
+tt|tÉrv|†d°n|ÉÉ}n|ddÖ }t|É}d}x|||k êr|d d  | _}|||  d  | _}|| ||  ||< ||< || ||| ||  d  A ||< |d7 }qöW |S )zn
+		return the list of encoded bytes of B, B might be a string or a
+		list of integers between 0 <= i <= 255
+		r   Nr   È   r   )r   r   r   r   ⁄
+isinstance⁄strr   r   ⁄bytesZ
+basestring⁄mapr   Zunicoder   )r   ⁄Br   r   r   ⁄C⁄n⁄pr	   r	   r
+   ⁄_encode.   s    8
+$$zArcIV._encodec             C   s   t | †|°ÉS )zArcIV encode string S)r   r#   )r   ⁄Sr	   r	   r
+   r   I   s    zArcIV.encodec             C   s   d† tt| †|°É°S )zArcIV encode string S⁄ )⁄joinr   ⁄chrr#   )r   r$   r	   r	   r
+   r   M   s    N)	⁄__name__⁄
+__module__⁄__qualname__⁄__doc__r   r   r#   r   r   r	   r	   r	   r
+   r   	   s   
+r   s   #Egâ´ÕÔs   u∑áÄô‡≈ñ)r   ⁄input⁄outputs           s   tî¬ÁKys   ﬁâA£7]:s   Ô#Es
+             s
+   ÷°AßÏ<8ﬂΩas   s   uï√ÊJ	xJ‘R3é˝öÈIèÅ=vS4I∂wç ÿ«äç+©¨f]S’ú&¬—ƒê¡ÎæÊmk∂π∏G¬ZëDzïÁ^NÒgyÕËø
+ïÖ2ØñâDO”wèò˝À‘Á&Vu ôÃ~£ƒ™££á“;èªÕB°Ω1zC›•´àñÆÄ¡ã
+ˆmˇ1ñÎxNIZ“Œê◊˜r®G∂_b	;πÂ∫S/ØÏGPÉ#Êq2}˘DD2ÀsgŒ»/]D¿–g÷P†uÕKpﬁ›wÎõ#k[tG9mbât!‘=˘¥.Dn5éú©≤NÀÔÿÁ®wÔñèêÏõ=5•X\∞	)/ÕÁµÏfŸK‰@U¶Ÿ›√oîá˜À')BdEôÖ¡]S°åÜL„¢∑UWìòÅ&R¨Ú„n#ëæ‰›Sı˝≥[Ÿús]=õ√5Óûˆõ8gø-{—Í•ïÿø¿o¯”	Îl™ lÄzb>¯L=3¡ï“>„ ƒ‡UÅW»"‘∏≈iÿIÆ’ùN◊ÛyXkKˆÑÌjütÜ‘õúK≠õ¢Kñ´˘$7,äèˇ±U5I ßz=µÚ·πüÕÜ`Ü:ö‘´‰§â4=›ÂB¶XU@˝h<øÿ¿ö(MÍÃLﬁ˛Xæq7Tq&»‘û'U´∑È@∞¿c             C   s   t |É†| °S )z.One-line shortcut for making an encoder object)r   r   )⁄textr   r	   r	   r
+   r   ÷   s    r   c             C   s   t |É†| °S )zOne-line shortcut for decoding)r   r   )r.   r   r	   r	   r
+   ⁄decode⁄   s    r/   ⁄__main__r   r,   r-   r   N)r+   ⁄split⁄__all__⁄__version__Zreportlab.lib.utilsr   r   r   Z_TESTSr   r/   r(   r   ⁄t⁄or	   r	   r	   r
+   ⁄<module>   s6   I44
+
+                                                                  B
+    ¨+ Z|  „               @   sê   d Z dZddlmZmZ ddlmZ ddlmZm	Z	 G ddÑ dÉZ
+G dd	Ñ d	ÉZG d
+dÑ deÉZddÑ ZdddÑZddÑ ZddÑ ZdddÑZdS )z3.3.0añ  Framework for objects whose assignments are checked. Used by graphics.
 
-/*******************  Bit definition for PWR_CSR register  ********************/
-#define PWR_CSR_WUF_Pos        (0U)                                            
-#define PWR_CSR_WUF_Msk        (0x1UL << PWR_CSR_WUF_Pos)                       /*!< 0x00000001 */
-#define PWR_CSR_WUF            PWR_CSR_WUF_Msk                                 /*!< Wakeup Flag                                      */
-#define PWR_CSR_SBF_Pos        (1U)                                            
-#define PWR_CSR_SBF_Msk        (0x1UL << PWR_CSR_SBF_Pos)                       /*!< 0x00000002 */
-#define PWR_CSR_SBF            PWR_CSR_SBF_Msk                                 /*!< Standby Flag                                     */
-#define PWR_CSR_PVDO_Pos       (2U)                                            
-#define PWR_CSR_PVDO_Msk       (0x1UL << PWR_CSR_PVDO_Pos)                      /*!< 0x00000004 */
-#define PWR_CSR_PVDO           PWR_CSR_PVDO_Msk                                /*!< PVD Output                                       */
-#define PWR_CSR_BRR_Pos        (3U)                                            
-#define PWR_CSR_BRR_Msk        (0x1UL << PWR_CSR_BRR_Pos)                       /*!< 0x00000008 */
-#define PWR_CSR_BRR            PWR_CSR_BRR_Msk                                 /*!< Backup regulator ready                           */
-#define PWR_CSR_EWUP_Pos       (8U)                                            
-#define PWR_CSR_EWUP_Msk       (0x1UL << PWR_CSR_EWUP_Pos)                      /*!< 0x00000100 */
-#define PWR_CSR_EWUP           PWR_CSR_EWUP_Msk                                /*!< Enable WKUP pin                                  */
-#define PWR_CSR_BRE_Pos        (9U)                                            
-#define PWR_CSR_BRE_Msk        (0x1UL << PWR_CSR_BRE_Pos)                       /*!< 0x00000200 */
-#define PWR_CSR_BRE            PWR_CSR_BRE_Msk                                 /*!< Backup regulator enable                          */
-#define PWR_CSR_VOSRDY_Pos     (14U)                                           
-#define PWR_CSR_VOSRDY_Msk     (0x1UL << PWR_CSR_VOSRDY_Pos)                    /*!< 0x00004000 */
-#define PWR_CSR_VOSRDY         PWR_CSR_VOSRDY_Msk                              /*!< Regulator voltage scaling output selection ready */
+We developed reportlab/graphics prior to Python 2 and metaclasses. For the
+graphics, we wanted to be able to declare the attributes of a class, check
+them on assignment, and convert from string arguments.  Examples of
+attrmap-based objects can be found in reportlab/graphics/shapes.  It lets
+us defined structures like the one below, which are seen more modern form in
+Django models and other frameworks.
 
-/* Legacy define */
-#define  PWR_CSR_REGRDY                      PWR_CSR_VOSRDY
+We'll probably replace this one day soon, hopefully with no impact on client
+code.
 
-/******************************************************************************/
-/*                                                                            */
-/*                         Reset and Clock Control                            */
-/*                                                                            */
-/******************************************************************************/
-/********************  Bit definition for RCC_CR register  ********************/
-#define RCC_CR_HSION_Pos                   (0U)                                
-#define RCC_CR_HSION_Msk                   (0x1UL << RCC_CR_HSION_Pos)          /*!< 0x00000001 */
-#define RCC_CR_HSION                       RCC_CR_HSION_Msk                    
-#define RCC_CR_HSIRDY_Pos                  (1U)                                
-#define RCC_CR_HSIRDY_Msk                  (0x1UL << RCC_CR_HSIRDY_Pos)         /*!< 0x00000002 */
-#define RCC_CR_HSIRDY                      RCC_CR_HSIRDY_Msk                   
+class Rect(SolidShape):
+    """Rectangle, possibly with rounded corners."""
 
-#define RCC_CR_HSITRIM_Pos                 (3U)                                
-#define RCC_CR_HSITRIM_Msk                 (0x1FUL << RCC_CR_HSITRIM_Pos)       /*!< 0x000000F8 */
-#define RCC_CR_HSITRIM                     RCC_CR_HSITRIM_Msk                  
-#define RCC_CR_HSITRIM_0                   (0x01UL << RCC_CR_HSITRIM_Pos)       /*!< 0x00000008 */
-#define RCC_CR_HSITRIM_1                   (0x02UL << RCC_CR_HSITRIM_Pos)       /*!< 0x00000010 */
-#define RCC_CR_HSITRIM_2                   (0x04UL << RCC_CR_HSITRIM_Pos)       /*!< 0x00000020 */
-#define RCC_CR_HSITRIM_3                   (0x08UL << RCC_CR_HSITRIM_Pos)       /*!< 0x00000040 */
-#define RCC_CR_HSITRIM_4                   (0x10UL << RCC_CR_HSITRIM_Pos)       /*!< 0x00000080 */
-
-#define RCC_CR_HSICAL_Pos                  (8U)                                
-#define RCC_CR_HSICAL_Msk                  (0xFFUL << RCC_CR_HSICAL_Pos)        /*!< 0x0000FF00 */
-#define RCC_CR_HSICAL                      RCC_CR_HSICAL_Msk                   
-#define RCC_CR_HSICAL_0                    (0x01UL << RCC_CR_HSICAL_Pos)        /*!< 0x00000100 */
-#define RCC_CR_HSICAL_1                    (0x02UL << RCC_CR_HSICAL_Pos)        /*!< 0x00000200 */
-#define RCC_CR_HSICAL_2                    (0x04UL << RCC_CR_HSICAL_Pos)        /*!< 0x00000400 */
-#define RCC_CR_HSICAL_3                    (0x08UL << RCC_CR_HSICAL_Pos)        /*!< 0x00000800 */
-#define RCC_CR_HSICAL_4                    (0x10UL << RCC_CR_HSICAL_Pos)        /*!< 0x00001000 */
-#define RCC_CR_HSICAL_5                    (0x20UL << RCC_CR_HSICAL_Pos)        /*!< 0x00002000 */
-#define RCC_CR_HSICAL_6                    (0x40UL << RCC_CR_HSICAL_Pos)        /*!< 0x00004000 */
-#define RCC_CR_HSICAL_7                    (0x80UL << RCC_CR_HSICAL_Pos)        /*!< 0x00008000 */
-
-#define RCC_CR_HSEON_Pos                   (16U)                               
-#define RCC_CR_HSEON_Msk                   (0x1UL << RCC_CR_HSEON_Pos)          /*!< 0x00010000 */
-#define RCC_CR_HSEON                       RCC_CR_HSEON_Msk                    
-#define RCC_CR_HSERDY_Pos                  (17U)                               
-#define RCC_CR_HSERDY_Msk                  (0x1UL << RCC_CR_HSERDY_Pos)         /*!< 0x00020000 */
-#define RCC_CR_HSERDY                      RCC_CR_HSERDY_Msk                   
-#define RCC_CR_HSEBYP_Pos                  (18U)                               
-#define RCC_CR_HSEBYP_Msk                  (0x1UL << RCC_CR_HSEBYP_Pos)         /*!< 0x00040000 */
-#define RCC_CR_HSEBYP                      RCC_CR_HSEBYP_Msk                   
-#define RCC_CR_CSSON_Pos                   (19U)                               
-#define RCC_CR_CSSON_Msk                   (0x1UL << RCC_CR_CSSON_Pos)          /*!< 0x00080000 */
-#define RCC_CR_CSSON                       RCC_CR_CSSON_Msk                    
-#define RCC_CR_PLLON_Pos                   (24U)                               
-#define RCC_CR_PLLON_Msk                   (0x1UL << RCC_CR_PLLON_Pos)          /*!< 0x01000000 */
-#define RCC_CR_PLLON                       RCC_CR_PLLON_Msk                    
-#define RCC_CR_PLLRDY_Pos                  (25U)                               
-#define RCC_CR_PLLRDY_Msk                  (0x1UL << RCC_CR_PLLRDY_Pos)         /*!< 0x02000000 */
-#define RCC_CR_PLLRDY                      RCC_CR_PLLRDY_Msk                   
-/*
- * @brief Specific device feature definitions (not present on all devices in the STM32F4 serie)
- */
-#define RCC_PLLI2S_SUPPORT                                                     /*!< Support PLLI2S oscillator */
-
-#define RCC_CR_PLLI2SON_Pos                (26U)                               
-#define RCC_CR_PLLI2SON_Msk                (0x1UL << RCC_CR_PLLI2SON_Pos)       /*!< 0x04000000 */
-#define RCC_CR_PLLI2SON                    RCC_CR_PLLI2SON_Msk                 
-#define RCC_CR_PLLI2SRDY_Pos               (27U)                               
-#define RCC_CR_PLLI2SRDY_Msk               (0x1UL << RCC_CR_PLLI2SRDY_Pos)      /*!< 0x08000000 */
-#define RCC_CR_PLLI2SRDY                   RCC_CR_PLLI2SRDY_Msk                
-
-/********************  Bit definition for RCC_PLLCFGR register  ***************/
-#define RCC_PLLCFGR_PLLM_Pos               (0U)                                
-#define RCC_PLLCFGR_PLLM_Msk               (0x3FUL << RCC_PLLCFGR_PLLM_Pos)     /*!< 0x0000003F */
-#define RCC_PLLCFGR_PLLM                   RCC_PLLCFGR_PLLM_Msk                
-#define RCC_PLLCFGR_PLLM_0                 (0x01UL << RCC_PLLCFGR_PLLM_Pos)     /*!< 0x00000001 */
-#define RCC_PLLCFGR_PLLM_1                 (0x02UL << RCC_PLLCFGR_PLLM_Pos)     /*!< 0x00000002 */
-#define RCC_PLLCFGR_PLLM_2                 (0x04UL << RCC_PLLCFGR_PLLM_Pos)     /*!< 0x00000004 */
-#define RCC_PLLCFGR_PLLM_3                 (0x08UL << RCC_PLLCFGR_PLLM_Pos)     /*!< 0x00000008 */
-#define RCC_PLLCFGR_PLLM_4                 (0x10UL << RCC_PLLCFGR_PLLM_Pos)     /*!< 0x00000010 */
-#define RCC_PLLCFGR_PLLM_5                 (0x20UL << RCC_PLLCFGR_PLLM_Pos)     /*!< 0x00000020 */
-
-#define RCC_PLLCFGR_PLLN_Pos               (6U)                                
-#define RCC_PLLCFGR_PLLN_Msk               (0x1FFUL << RCC_PLLCFGR_PLLN_Pos)    /*!< 0x00007FC0 */
-#define RCC_PLLCFGR_PLLN                   RCC_PLLCFGR_PLLN_Msk                
-#define RCC_PLLCFGR_PLLN_0                 (0x001UL << RCC_PLLCFGR_PLLN_Pos)    /*!< 0x00000040 */
-#define RCC_PLLCFGR_PLLN_1                 (0x002UL << RCC_PLLCFGR_PLLN_Pos)    /*!< 0x00000080 */
-#define RCC_PLLCFGR_PLLN_2                 (0x004UL << RCC_PLLCFGR_PLLN_Pos)    /*!< 0x00000100 */
-#define RCC_PLLCFGR_PLLN_3                 (0x008UL << RCC_PLLCFGR_PLLN_Pos)    /*!< 0x00000200 */
-#define RCC_PLLCFGR_PLLN_4                 (0x010UL << RCC_PLLCFGR_PLLN_Pos)    /*!< 0x00000400 */
-#define RCC_PLLCFGR_PLLN_5                 (0x020UL << RCC_PLLCFGR_PLLN_Pos)    /*!< 0x00000800 */
-#define RCC_PLLCFGR_PLLN_6                 (0x040UL << RCC_PLLCFGR_PLLN_Pos)    /*!< 0x00001000 */
-#define RCC_PLLCFGR_PLLN_7                 (0x080UL << RCC_PLLCFGR_PLLN_Pos)    /*!< 0x00002000 */
-#define RCC_PLLCFGR_PLLN_8                 (0x100UL << RCC_PLLCFGR_PLLN_Pos)    /*!< 0x00004000 */
-
-#define RCC_PLLCFGR_PLLP_Pos               (16U)                               
-#define RCC_PLLCFGR_PLLP_Msk               (0x3UL << RCC_PLLCFGR_PLLP_Pos)      /*!< 0x00030000 */
-#define RCC_PLLCFGR_PLLP                   RCC_PLLCFGR_PLLP_Msk                
-#define RCC_PLLCFGR_PLLP_0                 (0x1UL << RCC_PLLCFGR_PLLP_Pos)      /*!< 0x00010000 */
-#define RCC_PLLCFGR_PLLP_1                 (0x2UL << RCC_PLLCFGR_PLLP_Pos)      /*!< 0x00020000 */
-
-#define RCC_PLLCFGR_PLLSRC_Pos             (22U)                               
-#define RCC_PLLCFGR_PLLSRC_Msk             (0x1UL << RCC_PLLCFGR_PLLSRC_Pos)    /*!< 0x00400000 */
-#define RCC_PLLCFGR_PLLSRC                 RCC_PLLCFGR_PLLSRC_Msk              
-#define RCC_PLLCFGR_PLLSRC_HSE_Pos         (22U)                               
-#define RCC_PLLCFGR_PLLSRC_HSE_Msk         (0x1UL << RCC_PLLCFGR_PLLSRC_HSE_Pos) /*!< 0x00400000 */
-#define RCC_PLLCFGR_PLLSRC_HSE             RCC_PLLCFGR_PLLSRC_HSE_Msk          
-#define RCC_PLLCFGR_PLLSRC_HSI             0x00000000U                         
-
-#define RCC_PLLCFGR_PLLQ_Pos               (24U)                               
-#define RCC_PLLCFGR_PLLQ_Msk               (0xFUL << RCC_PLLCFGR_PLLQ_Pos)      /*!< 0x0F000000 */
-#define RCC_PLLCFGR_PLLQ                   RCC_PLLCFGR_PLLQ_Msk                
-#define RCC_PLLCFGR_PLLQ_0                 (0x1UL << RCC_PLLCFGR_PLLQ_Pos)      /*!< 0x01000000 */
-#define RCC_PLLCFGR_PLLQ_1                 (0x2UL << RCC_PLLCFGR_PLLQ_Pos)      /*!< 0x02000000 */
-#define RCC_PLLCFGR_PLLQ_2                 (0x4UL << RCC_PLLCFGR_PLLQ_Pos)      /*!< 0x04000000 */
-#define RCC_PLLCFGR_PLLQ_3                 (0x8UL << RCC_PLLCFGR_PLLQ_Pos)      /*!< 0x08000000 */
+    _attrMap = AttrMap(BASE=SolidShape,
+        x = AttrMapValue(isNumber),
+        y = AttrMapValue(isNumber),
+        width = AttrMapValue(isNumber),
+        height = AttrMapValue(isNumber),
+        rx = AttrMapValue(isNumber),
+        ry = AttrMapValue(isNumber),
+        )
 
 
-/********************  Bit definition for RCC_CFGR register  ******************/
-/*!< SW configuration */
-#define RCC_CFGR_SW_Pos                    (0U)                                
-#define RCC_CFGR_SW_Msk                    (0x3UL << RCC_CFGR_SW_Pos)           /*!< 0x00000003 */
-#define RCC_CFGR_SW                        RCC_CFGR_SW_Msk                     /*!< SW[1:0] bits (System clock Switch) */
-#define RCC_CFGR_SW_0                      (0x1UL << RCC_CFGR_SW_Pos)           /*!< 0x00000001 */
-#define RCC_CFGR_SW_1                      (0x2UL << RCC_CFGR_SW_Pos)           /*!< 0x00000002 */
+È    )⁄
+isAnything⁄DerivedValue)⁄isSeq)⁄	rl_config⁄asciic               @   s    e Zd ZdZddÑ ZddÑ ZdS )⁄CallableValuez(a class to allow callable initial valuesc             O   s   || _ || _|| _d S )N)⁄func⁄args⁄kw)⁄selfr   r	   r
+   © r   ˙7/usr/lib/python3/dist-packages/reportlab/lib/attrmap.py⁄__init__%   s    zCallableValue.__init__c             C   s   | j | j| jéS )N)r   r	   r
+   )r   r   r   r   ⁄__call__+   s    zCallableValue.__call__N)⁄__name__⁄
+__module__⁄__qualname__⁄__doc__r   r   r   r   r   r   r   #   s   r   c               @   s*   e Zd ZdZd
+ddÑZddÑ Zdd	Ñ ZdS )⁄AttrMapValuez,Simple multi-value holder for attribute mapsNr   c             K   sB   |pt | _|| _|| _|| _x |†° D ]\}}t| ||É q&W d S )N)r   ⁄validate⁄desc⁄_initialZ_advancedUsage⁄items⁄setattr)r   r   r   ⁄initialZadvancedUsager
+   ⁄k⁄vr   r   r   r   0   s    
+zAttrMapValue.__init__c             C   s:   |dkr"t | jtÉr| †° S | jS |dkr.dS t|ÉÇd S )Nr   Zhiddenr   )⁄
+isinstancer   r   ⁄AttributeError)r   ⁄namer   r   r   ⁄__getattr__8   s     zAttrMapValue.__getattr__c             C   s   dd† ddÑ | j†° D É° S )NzAttrMapValue(%s)z, c             S   s   g | ]}d | ëqS )z%s=%rr   )⁄.0⁄ir   r   r   ˙
+<listcomp>B   s    z)AttrMapValue.__repr__.<locals>.<listcomp>)⁄join⁄__dict__r   )r   r   r   r   ⁄__repr__A   s    zAttrMapValue.__repr__)NNNr   )r   r   r   r   r   r    r&   r   r   r   r   r   .   s   
+	r   c               @   s.   e Zd Zdg fddÑZddÑ Zg fddÑZdS )⁄AttrMapNc             K   så   i }|rht |tÉr|}nPt|És&|f}x@|D ]8}t|d| É}|| k	rT|rd|†|° q,tdt|É ÉÇq,W t†| |° | †	|° | †|° d S )N⁄_attrMapzBASE=%s has wrong kind of value)
+r   r'   r   ⁄getattr⁄update⁄
+ValueErrorr   ⁄dictr   ⁄remove)r   ⁄BASE⁄UNWANTEDr
+   ⁄data⁄BZamr   r   r   r   E   s    
+ 
+ 
+zAttrMap.__init__c          	   C   s2   x,|D ]$}y
+| |= W q t k
+r(   Y qX qW d S )N)⁄KeyError)r   Zunwantedr   r   r   r   r-   W   s
+    
+
+zAttrMap.removec             K   s   t | |dç}|†|° |S )N)r.   r/   )r'   r*   )r   r/   r
+   ⁄cr   r   r   ⁄clone^   s    
+zAttrMap.clone)r   r   r   r   r-   r4   r   r   r   r   r'   D   s   r'   c             C   så   t jr~| j}|r~|d dkr~t|tÉr(nVy,|| j}||ÉsRtd||| jjf ÉÇW n( t	k
+r|   td|| jjf ÉÇY nX || j
+|< dS )z validate setattr(obj,name,value)r   ⁄_z.Illegal assignment of '%s' to '%s' in class %sz"Illegal attribute '%s' in class %sN)r   ZshapeCheckingr(   r   r   r   r   ⁄	__class__r   r2   r%   )⁄objr   ⁄value⁄mapr   r   r   r   ⁄validateSetattrc   s    
+
+r:   c             C   sL   | j }t| jddÉ}|r6||kr,|†° |fS |dfS n||krH|†° | _ dS )zclone obj._attrMap if requiredr(   N)r(   r)   r6   r4   )r7   Zret⁄A⁄oAr   r   r   ⁄_privateAttrMapv   s    
+r=   c             C   sJ   |† d°}t|ÉdkrdS x|ddÖ D ]}t| |É} q(W | |d fS dS )zPLocate the object src.P for P a string, return parent and name of attribute
+    ⁄.r   )NNÈˇˇˇˇN)⁄split⁄lenr)   )⁄src⁄P⁄pr   r   r   ⁄_findObjectAndAttrÉ   s    
+rE   c          	   C   sN   t | dÉsJ| j}dd l}|†|j|f|j g t| dd ÉtfddÑdú°| _d S )N⁄__attrproxy__r   ⁄__setattr__c             S   s   || |||ÉS )Nr   )r   r   r   Zosa⁄hookr   r   r   ⁄<lambda>î   Û    z!hook__setattr__.<locals>.<lambda>)rF   rG   )⁄hasattrr6   ⁄newZclassobjr   ⁄	__bases__r)   rH   )r7   ⁄CrL   r   r   r   ⁄hook__setattr__é   s    
+rO   Nc             C   sÑ   t | dÉstdÉÇt| dÉ\}}t|És.|f}g }g }	xH|D ]@}
+t|
+Ér^|
+d |
+ddÖ  }
+}t| |
+É\}}|r<t|ddÉ}q<W dS )z>
+    Add a proxy attribute 'name' to src with targets dst
+    r(   zsrc object has no _attrMapÈ   r   N)rK   ⁄AssertionErrorr=   r   rE   r)   )rB   r   r   r   r   ⁄dstr;   r<   ⁄DZDV⁄d⁄er7   ⁄attrZdAr   r   r   ⁄addProxyAttributeñ   s     
+rW   )r   )NNNN)⁄__version__r   Zreportlab.lib.validatorsr   r   Zreportlab.lib.utilsr   Z	reportlabr   r   r   r   r,   r'   r:   r=   rE   rO   rW   r   r   r   r   ⁄<module>   s   
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     B
+    <≠‘Zo  „               @   s    d Z dZd	ddÑZd
+ddÑZdS )z3.4.34z;Utility functions to position and resize boxes within boxes⁄swFc             C   sd   |dkr&|dkr| |d 7 } n| |7 } |dkrL|dkrD||d 7 }n||7 }|r\| |||fS | |fS )zegiven rectangle controlled by x,y width and height return 
+    the corner corresponding to the anchor)⁄nw⁄wr   )⁄n⁄c⁄sg       @)r   r   ⁄se)r   r   ⁄e© )⁄x⁄y⁄width⁄height⁄anchorZdimsr	   r	   ˙8/usr/lib/python3/dist-packages/reportlab/lib/boxstuff.py⁄
+rectCorner   s    r   c	             C   s  d}	|dkr|}|dkr|}|dk r2| }||8 }|dk rH| }||8 }| r∂t |É}t |É}t|t|É |t|É É}	|}
+|}|	| d }|	| d }|s∂t|||
+| || |É\}}|r˙|dkr⁄||dkr‘|d n|8 }|dkr˙||d	krÙ|d n|8 }|||||	fS )
+ah  This function helps position an image within a box.
 
-#define RCC_CFGR_SW_HSI                    0x00000000U                         /*!< HSI selected as system clock */
-#define RCC_CFGR_SW_HSE                    0x00000001U                         /*!< HSE selected as system clock */
-#define RCC_CFGR_SW_PLL                    0x00000002U                         /*!< PLL selected as system clock */
+    It first normalizes for two cases:
+    - if the width is None, it assumes imWidth
+    - ditto for height
+    - if width or height is negative, it adjusts x or y and makes them positive
 
-/*!< SWS configuration */
-#define RCC_CFGR_SWS_Pos                   (2U)                                
-#define RCC_CFGR_SWS_Msk                   (0x3UL << RCC_CFGR_SWS_Pos)          /*!< 0x0000000C */
-#define RCC_CFGR_SWS                       RCC_CFGR_SWS_Msk                    /*!< SWS[1:0] bits (System Clock Switch Status) */
-#define RCC_CFGR_SWS_0                     (0x1UL << RCC_CFGR_SWS_Pos)          /*!< 0x00000004 */
-#define RCC_CFGR_SWS_1                     (0x2UL << RCC_CFGR_SWS_Pos)          /*!< 0x00000008 */
+    Given
+    (a) the enclosing box (defined by x,y,width,height where x,y is the         lower left corner) which you wish to position the image in, and
+    (b) the image size (imWidth, imHeight), and
+    (c) the 'anchor point' as a point of the compass - n,s,e,w,ne,se etc         and c for centre,
 
-#define RCC_CFGR_SWS_HSI                   0x00000000U                         /*!< HSI oscillator used as system clock        */
-#define RCC_CFGR_SWS_HSE                   0x00000004U                         /*!< HSE oscillator used as system clock        */
-#define RCC_CFGR_SWS_PLL                   0x00000008U                         /*!< PLL used as system clock                   */
+    this should return the position at which the image should be drawn,
+    as well as a scale factor indicating what scaling has happened.
 
-/*!< HPRE configuration */
-#define RCC_CFGR_HPRE_Pos                  (4U)                                
-#define RCC_CFGR_HPRE_Msk                  (0xFUL << RCC_CFGR_HPRE_Pos)         /*!< 0x000000F0 */
-#define RCC_CFGR_HPRE                      RCC_CFGR_HPRE_Msk                   /*!< HPRE[3:0] bits (AHB prescaler) */
-#define RCC_CFGR_HPRE_0                    (0x1UL << RCC_CFGR_HPRE_Pos)         /*!< 0x00000010 */
-#define RCC_CFGR_HPRE_1                    (0x2UL << RCC_CFGR_HPRE_Pos)         /*!< 0x00000020 */
-#define RCC_CFGR_HPRE_2                    (0x4UL << RCC_CFGR_HPRE_Pos)         /*!< 0x00000040 */
-#define RCC_CFGR_HPRE_3                    (0x8UL << RCC_CFGR_HPRE_Pos)         /*!< 0x00000080 */
+    It returns the parameters which would be used to draw the image
+    without any adjustments:
 
-#define RCC_CFGR_HPRE_DIV1                 0x00000000U                         /*!< SYSCLK not divided    */
-#define RCC_CFGR_HPRE_DIV2                 0x00000080U                         /*!< SYSCLK divided by 2   */
-#define RCC_CFGR_HPRE_DIV4                 0x00000090U                         /*!< SYSCLK divided by 4   */
-#define RCC_CFGR_HPRE_DIV8                 0x000000A0U                         /*!< SYSCLK divided by 8   */
-#define RCC_CFGR_HPRE_DIV16                0x000000B0U                         /*!< SYSCLK divided by 16  */
-#define RCC_CFGR_HPRE_DIV64                0x000000C0U                         /*!< SYSCLK divided by 64  */
-#define RCC_CFGR_HPRE_DIV128               0x000000D0U                         /*!< SYSCLK divided by 128 */
-#define RCC_CFGR_HPRE_DIV256               0x000000E0U                         /*!< SYSCLK divided by 256 */
-#define RCC_CFGR_HPRE_DIV512               0x000000F0U                         /*!< SYSCLK divided by 512 */
+        x,y, width, height, scale
 
-/*!< PPRE1 configuration */
-#define RCC_CFGR_PPRE1_Pos                 (10U)                               
-#define RCC_CFGR_PPRE1_Msk                 (0x7UL << RCC_CFGR_PPRE1_Pos)        /*!< 0x00001C00 */
-#define RCC_CFGR_PPRE1                     RCC_CFGR_PPRE1_Msk                  /*!< PRE1[2:0] bits (APB1 prescaler) */
-#define RCC_CFGR_PPRE1_0                   (0x1UL << RCC_CFGR_PPRE1_Pos)        /*!< 0x00000400 */
-#define RCC_CFGR_PPRE1_1                   (0x2UL << RCC_CFGR_PPRE1_Pos)        /*!< 0x00000800 */
-#define RCC_CFGR_PPRE1_2                   (0x4UL << RCC_CFGR_PPRE1_Pos)        /*!< 0x00001000 */
+    used in canvas.drawImage and drawInlineImage
+    g      ?NÈ    g:å0‚éyE>)r   r   r   )r   r   r   g       @)r   r   r   )r   r   r   )⁄abs⁄min⁄floatr   )Zpreserver   r
+   r   r   r   ZimWidthZimHeightZ
+anchorAtXYZscaleZowidthZoheightr	   r	   r   ⁄aspectRatioFix   s6    r   N)r   F)F)⁄__version__⁄__doc__r   r   r	   r	   r	   r   ⁄<module>   s   
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   B
+    ¨+ Z3  „               @   s¯   d Z dZddlZddlmZ ddlmZ ddlmZm	Z	 ddl
+mZmZmZmZmZ ddlmZ dd	lmZ dd
+lmZ dddddúZG ddÑ deÉZG ddÑ deÉZG ddÑ deÉZG ddÑ deÉZddÑ ZG ddÑ deÉZddÑ ZedkrÙeÉ  dS )z3.3.0aL  Routines to print code page (character set) drawings. Predates unicode.
 
-#define RCC_CFGR_PPRE1_DIV1                0x00000000U                         /*!< HCLK not divided   */
-#define RCC_CFGR_PPRE1_DIV2                0x00001000U                         /*!< HCLK divided by 2  */
-#define RCC_CFGR_PPRE1_DIV4                0x00001400U                         /*!< HCLK divided by 4  */
-#define RCC_CFGR_PPRE1_DIV8                0x00001800U                         /*!< HCLK divided by 8  */
-#define RCC_CFGR_PPRE1_DIV16               0x00001C00U                         /*!< HCLK divided by 16 */
+To be sure we can accurately represent characters in various encodings
+and fonts, we need some routines to display all those characters.
+These are defined herein.  The idea is to include flowable, drawable
+and graphic objects for single and multi-byte fonts. È    N)⁄Canvas)⁄Flowable)⁄
+pdfmetrics⁄cidfonts)⁄Drawing⁄Group⁄String⁄Circle⁄Rect)⁄Widget)⁄colors)⁄int2ByteZwinansi⁄macromanZ	macexpertZpdfdoc)⁄WinAnsiEncodingZMacRomanEncodingZ	MacExpertZPDFDocc               @   s2   e Zd ZdZddÑ ZddÑ ZddÑ Zdd	d
+ÑZdS )⁄CodeChartBasezrBasic bits of drawing furniture used by
+    single and multi-byte versions: ability to put letters
+    into boxes.c             C   sæ   | j d | j }|t|Ékr(t|É| _nt|Éd | _| jd| j  | _| jd| j  | _g | _x(t| jd ÉD ]}| j†	|| j ° qpW g | _
+x(t| jd ÉD ]}| j
+†	|| j ° q†W dS )z&Work out x and y positions for drawingg      ?È   È   N)⁄
+codePoints⁄charsPerRow⁄int⁄rows⁄boxSize⁄width⁄height⁄ylist⁄range⁄append⁄xlist)⁄selfr   ⁄row⁄col© r!   ˙:/usr/lib/python3/dist-packages/reportlab/lib/codecharts.py⁄
+calcLayout#   s    zCodeChartBase.calcLayoutc             C   s   | j rd| S d| S d S )Nz%02Xz%d)⁄hex)r   ⁄bytr!   r!   r"   ⁄
+formatByte8   s    zCodeChartBase.formatBytec             C   sé  | j | j t|É }xt|ÉD ]}|†d° qW d}d}| j†| j| jd ° êx8|D ê].}|dkr¥| j†	d° | jj
+d| | j | j | d | j | j| jdddç | j†	d° n¥y.| j†|d | j | j | d	 | j |° W nÑ   | j†	d° | jj
+d| | j | j | d | j | j| jdddç | j†|d | j | j | d	 | j d
+° | j†	d° Y nX |d }|| jkrV|d }d}qVW dS )z]Fills boxes in order.  None means skip a box.
+        Empty boxes at end get filled with grayNr   g      Ë?gÕÃÃÃÃÃÏ?r   )⁄stroke⁄fillg        g      ¯?g      Ï?˙?)r   r   ⁄lenr   r   ⁄canv⁄setFont⁄fontNamer   ⁄setFillGray⁄rect⁄drawCentredString)r   ⁄charListZextraNeeded⁄ir   r    ⁄chr!   r!   r"   ⁄	drawChars>   s<    $
+$
+zCodeChartBase.drawChars⁄ c             C   sN  | j †d° | j jd| jd | j| jdddç | j jdd| j| jd dddç | j †d° | j †dd| j ° d}xZt| jÉD ]L}| j	rî| j	| }n| †
+|| j °}| j †d	| j | j| d
+ | j |° q~W x>t| jÉD ]0}| j †|d | j | jd | j | †
+|°° q⁄W |êrJ| j †dd	| j ° | j †d	| j | jd | j |° dS )z4Writes little labels in the top row and first columngöôôôôôÈ?r   È˛ˇˇˇr   )r(   r'   g        zHelvetica-Obliqueg      ÿ?g      ‡?g      Ë?g      ¯?g      –?zHelvetica-BoldObliqueN)r+   r.   r/   r   r   r   r,   r   r   ⁄	rowLabelsr&   r   r0   )r   ⁄topLeftr%   r   Zlabelr    r!   r!   r"   ⁄
+drawLabelsd   s,    " 
+zCodeChartBase.drawLabelsN)r5   )⁄__name__⁄
+__module__⁄__qualname__⁄__doc__r#   r&   r4   r9   r!   r!   r!   r"   r      s
+   &r   c               @   s   e Zd ZdddÑZdd	Ñ Zd
+S )⁄SingleByteEncodingChart⁄	Helveticar   È   È   r   c             C   sb   d| _ || _|| _| jd | j | _|| _|| _|| _d | _t†	t†
+| j| j| j°° | †°  d S )NÈ   ˙-)r   ⁄faceName⁄encodingNamer-   r   r   r$   r7   r   ⁄registerFontZFontr#   )r   rD   rE   r   r   r$   r!   r!   r"   ⁄__init__Ö   s    
+z SingleByteEncodingChart.__init__c                sà   | † °  d gd tttttddÉÉÉÉ }| j}t†||°}t†	|°d âáfddÑâ á fddÑ|D É}| †
+|° | j†| j| j° d S )NÈ    rB   r   c                s    | d krd S à | ddçd S d S )N⁄replace)⁄errorsr   r!   )Ztxt)⁄decoderr!   r"   ⁄
+decodeFunc¢   s    z0SingleByteEncodingChart.draw.<locals>.decodeFuncc                s   g | ]}à |ÉëqS r!   r!   )⁄.0r3   )rL   r!   r"   ˙
+<listcomp>®   s    z0SingleByteEncodingChart.draw.<locals>.<listcomp>)r9   ⁄list⁄mapr   r   rE   ⁄adobe2codec⁄get⁄codecs⁄lookupr4   r+   ⁄gridr   r   )r   r1   ZencNamer!   )rL   rK   r"   ⁄drawó   s    "
+zSingleByteEncodingChart.drawN)r?   r   r@   rA   r   )r:   r;   r<   rG   rV   r!   r!   r!   r"   r>   Ñ   s    
+r>   c               @   s(   e Zd ZdZddÑ ZddÑ ZddÑ ZdS )	⁄KutenRowCodeChartaf  Formats one 'row' of the 94x94 space used in many Asian encodings.aliases
 
-/*!< PPRE2 configuration */
-#define RCC_CFGR_PPRE2_Pos                 (13U)                               
-#define RCC_CFGR_PPRE2_Msk                 (0x7UL << RCC_CFGR_PPRE2_Pos)        /*!< 0x0000E000 */
-#define RCC_CFGR_PPRE2                     RCC_CFGR_PPRE2_Msk                  /*!< PRE2[2:0] bits (APB2 prescaler) */
-#define RCC_CFGR_PPRE2_0                   (0x1UL << RCC_CFGR_PPRE2_Pos)        /*!< 0x00002000 */
-#define RCC_CFGR_PPRE2_1                   (0x2UL << RCC_CFGR_PPRE2_Pos)        /*!< 0x00004000 */
-#define RCC_CFGR_PPRE2_2                   (0x4UL << RCC_CFGR_PPRE2_Pos)        /*!< 0x00008000 */
+    These deliberately resemble the code charts in Ken Lunde's "Understanding
+    CJKV Information Processing", to enable manual checking.  Due to the large
+    numbers of characters, we don't try to make one graphic with 10,000 characters,
+    but rather output a sequence of these.c             C   sñ   || _ d| _d| _d| _d| _ddddd	g| _d
+| _|| _|| _yt	†
+| j| j°}t†|° W n   d| _d| _Y nX | jd | j | _| †°  d S )NÈ^   È   È   È   Z00Z20Z40Z60Z80r   r?   r   rC   )r   r   r   r   r   r7   r$   rD   rE   r   ⁄CIDFontr   rF   r-   r#   )r   r   rD   rE   ⁄fontr!   r!   r"   rG   π   s"    zKutenRowCodeChart.__init__c             C   s`   g }| j †d°dkrLxFtddÉD ]&}t|d Ét|d É }|†|° q W n|†dgd ° |S )z1Works out the character values for this kuten rowZEUCÈˇˇˇˇr   È_   È†   NrX   )rE   ⁄findr   r   r   )r   r   ⁄cellsr    r3   r!   r!   r"   ⁄makeRowœ   s    zKutenRowCodeChart.makeRowc             C   sD   | j d| j dç d g| †| j° }| †|° | j†| j| j° d S )NzR%d)r8   )r9   r   rc   r4   r+   rU   r   r   )r   r1   r!   r!   r"   rV   ﬂ   s    
+zKutenRowCodeChart.drawN)r:   r;   r<   r=   rG   rc   rV   r!   r!   r!   r"   rW   ∞   s   rW   c               @   s(   e Zd ZdZddÑ ZddÑ ZddÑ ZdS )	⁄Big5CodeChartzøFormats one 'row' of the 94x160 space used in Big 5
 
-#define RCC_CFGR_PPRE2_DIV1                0x00000000U                         /*!< HCLK not divided   */
-#define RCC_CFGR_PPRE2_DIV2                0x00008000U                         /*!< HCLK divided by 2  */
-#define RCC_CFGR_PPRE2_DIV4                0x0000A000U                         /*!< HCLK divided by 4  */
-#define RCC_CFGR_PPRE2_DIV8                0x0000C000U                         /*!< HCLK divided by 8  */
-#define RCC_CFGR_PPRE2_DIV16               0x0000E000U                         /*!< HCLK divided by 16 */
+    These deliberately resemble the code charts in Ken Lunde's "Understanding
+    CJKV Information Processing", to enable manual checking.c          
+   C   s†   || _ d| _d| _d| _d| _d| _|| _|| _dddd	d
+dddddg
+| _yt	†
+| j| j°}t†|° W n   d| _d| _Y nX | jd | j | _| †°  d S )Nr`   rY   r@   È
+   r   ⁄4⁄5⁄6⁄7⁄A⁄B⁄C⁄D⁄E⁄Fr?   r   rC   )r   r   r   r   r   r$   rD   rE   r7   r   r\   r   rF   r-   r#   )r   r   rD   rE   r]   r!   r!   r"   rG      s"    zBig5CodeChart.__init__c             C   sp   g }| j †d°dkr\xVdD ]<}x6tdÉD ]*}|d | }t|Ét|É }|†|° q(W qW n|†dgd ° |S )zLWorks out the character values for this Big5 row.
+        Rows start at 0xA1ZB5r^   )
+È   r[   È   È   re   È   È   È   rA   È   r@   Nr`   )rE   ra   r   r   r   )r   r   rb   ⁄y⁄xr    r3   r!   r!   r"   rc     s    
+zBig5CodeChart.makeRowc             C   s>   | j d| j dç | †| j°}| †|° | j†| j| j° d S )Nz%02X)r8   )r9   r   rc   r4   r+   rU   r   r   )r   r1   r!   r!   r"   rV     s    
+zBig5CodeChart.drawN)r:   r;   r<   r=   rG   rc   rV   r!   r!   r!   r"   rd   Î   s   rd   c             C   sú   |† °  yt†|°}W n( tk
+r>   t†|°}t†|° Y nX |†d° |j||t†	| |d°ddddç |†d° |†
+|dd° |†||| ° |†°  dS )z°Helper for stringwidth tests on Asian fonts.
 
-/*!< RTCPRE configuration */
-#define RCC_CFGR_RTCPRE_Pos                (16U)                               
-#define RCC_CFGR_RTCPRE_Msk                (0x1FUL << RCC_CFGR_RTCPRE_Pos)      /*!< 0x001F0000 */
-#define RCC_CFGR_RTCPRE                    RCC_CFGR_RTCPRE_Msk                 
-#define RCC_CFGR_RTCPRE_0                  (0x01UL << RCC_CFGR_RTCPRE_Pos)      /*!< 0x00010000 */
-#define RCC_CFGR_RTCPRE_1                  (0x02UL << RCC_CFGR_RTCPRE_Pos)      /*!< 0x00020000 */
-#define RCC_CFGR_RTCPRE_2                  (0x04UL << RCC_CFGR_RTCPRE_Pos)      /*!< 0x00040000 */
-#define RCC_CFGR_RTCPRE_3                  (0x08UL << RCC_CFGR_RTCPRE_Pos)      /*!< 0x00080000 */
-#define RCC_CFGR_RTCPRE_4                  (0x10UL << RCC_CFGR_RTCPRE_Pos)      /*!< 0x00100000 */
-
-/*!< MCO1 configuration */
-#define RCC_CFGR_MCO1_Pos                  (21U)                               
-#define RCC_CFGR_MCO1_Msk                  (0x3UL << RCC_CFGR_MCO1_Pos)         /*!< 0x00600000 */
-#define RCC_CFGR_MCO1                      RCC_CFGR_MCO1_Msk                   
-#define RCC_CFGR_MCO1_0                    (0x1UL << RCC_CFGR_MCO1_Pos)         /*!< 0x00200000 */
-#define RCC_CFGR_MCO1_1                    (0x2UL << RCC_CFGR_MCO1_Pos)         /*!< 0x00400000 */
-
-#define RCC_CFGR_I2SSRC_Pos                (23U)                               
-#define RCC_CFGR_I2SSRC_Msk                (0x1UL << RCC_CFGR_I2SSRC_Pos)       /*!< 0x00800000 */
-#define RCC_CFGR_I2SSRC                    RCC_CFGR_I2SSRC_Msk                 
-
-#define RCC_CFGR_MCO1PRE_Pos               (24U)                               
-#define RCC_CFGR_MCO1PRE_Msk               (0x7UL << RCC_CFGR_MCO1PRE_Pos)      /*!< 0x07000000 */
-#define RCC_CFGR_MCO1PRE                   RCC_CFGR_MCO1PRE_Msk                
-#define RCC_CFGR_MCO1PRE_0                 (0x1UL << RCC_CFGR_MCO1PRE_Pos)      /*!< 0x01000000 */
-#define RCC_CFGR_MCO1PRE_1                 (0x2UL << RCC_CFGR_MCO1PRE_Pos)      /*!< 0x02000000 */
-#define RCC_CFGR_MCO1PRE_2                 (0x4UL << RCC_CFGR_MCO1PRE_Pos)      /*!< 0x04000000 */
-
-#define RCC_CFGR_MCO2PRE_Pos               (27U)                               
-#define RCC_CFGR_MCO2PRE_Msk               (0x7UL << RCC_CFGR_MCO2PRE_Pos)      /*!< 0x38000000 */
-#define RCC_CFGR_MCO2PRE                   RCC_CFGR_MCO2PRE_Msk                
-#define RCC_CFGR_MCO2PRE_0                 (0x1UL << RCC_CFGR_MCO2PRE_Pos)      /*!< 0x08000000 */
-#define RCC_CFGR_MCO2PRE_1                 (0x2UL << RCC_CFGR_MCO2PRE_Pos)      /*!< 0x10000000 */
-#define RCC_CFGR_MCO2PRE_2                 (0x4UL << RCC_CFGR_MCO2PRE_Pos)      /*!< 0x20000000 */
-
-#define RCC_CFGR_MCO2_Pos                  (30U)                               
-#define RCC_CFGR_MCO2_Msk                  (0x3UL << RCC_CFGR_MCO2_Pos)         /*!< 0xC0000000 */
-#define RCC_CFGR_MCO2                      RCC_CFGR_MCO2_Msk                   
-#define RCC_CFGR_MCO2_0                    (0x1UL << RCC_CFGR_MCO2_Pos)         /*!< 0x40000000 */
-#define RCC_CFGR_MCO2_1                    (0x2UL << RCC_CFGR_MCO2_Pos)         /*!< 0x80000000 */
-
-/********************  Bit definition for RCC_CIR register  *******************/
-#define RCC_CIR_LSIRDYF_Pos                (0U)                                
-#define RCC_CIR_LSIRDYF_Msk                (0x1UL << RCC_CIR_LSIRDYF_Pos)       /*!< 0x00000001 */
-#define RCC_CIR_LSIRDYF                    RCC_CIR_LSIRDYF_Msk                 
-#define RCC_CIR_LSERDYF_Pos                (1U)                                
-#define RCC_CIR_LSERDYF_Msk                (0x1UL << RCC_CIR_LSERDYF_Pos)       /*!< 0x00000002 */
-#define RCC_CIR_LSERDYF                    RCC_CIR_LSERDYF_Msk                 
-#define RCC_CIR_HSIRDYF_Pos                (2U)                                
-#define RCC_CIR_HSIRDYF_Msk                (0x1UL << RCC_CIR_HSIRDYF_Pos)       /*!< 0x00000004 */
-#define RCC_CIR_HSIRDYF                    RCC_CIR_HSIRDYF_Msk                 
-#define RCC_CIR_HSERDYF_Pos                (3U)                                
-#define RCC_CIR_HSERDYF_Msk                (0x1UL << RCC_CIR_HSERDYF_Pos)       /*!< 0x00000008 */
-#define RCC_CIR_HSERDYF                    RCC_CIR_HSERDYF_Msk                 
-#define RCC_CIR_PLLRDYF_Pos                (4U)                                
-#define RCC_CIR_PLLRDYF_Msk                (0x1UL << RCC_CIR_PLLRDYF_Pos)       /*!< 0x00000010 */
-#define RCC_CIR_PLLRDYF                    RCC_CIR_PLLRDYF_Msk                 
-#define RCC_CIR_PLLI2SRDYF_Pos             (5U)                                
-#define RCC_CIR_PLLI2SRDYF_Msk             (0x1UL << RCC_CIR_PLLI2SRDYF_Pos)    /*!< 0x00000020 */
-#define RCC_CIR_PLLI2SRDYF                 RCC_CIR_PLLI2SRDYF_Msk              
-
-#define RCC_CIR_CSSF_Pos                   (7U)                                
-#define RCC_CIR_CSSF_Msk                   (0x1UL << RCC_CIR_CSSF_Pos)          /*!< 0x00000080 */
-#define RCC_CIR_CSSF                       RCC_CIR_CSSF_Msk                    
-#define RCC_CIR_LSIRDYIE_Pos               (8U)                                
-#define RCC_CIR_LSIRDYIE_Msk               (0x1UL << RCC_CIR_LSIRDYIE_Pos)      /*!< 0x00000100 */
-#define RCC_CIR_LSIRDYIE                   RCC_CIR_LSIRDYIE_Msk                
-#define RCC_CIR_LSERDYIE_Pos               (9U)                                
-#define RCC_CIR_LSERDYIE_Msk               (0x1UL << RCC_CIR_LSERDYIE_Pos)      /*!< 0x00000200 */
-#define RCC_CIR_LSERDYIE                   RCC_CIR_LSERDYIE_Msk                
-#define RCC_CIR_HSIRDYIE_Pos               (10U)                               
-#define RCC_CIR_HSIRDYIE_Msk               (0x1UL << RCC_CIR_HSIRDYIE_Pos)      /*!< 0x00000400 */
-#define RCC_CIR_HSIRDYIE                   RCC_CIR_HSIRDYIE_Msk                
-#define RCC_CIR_HSERDYIE_Pos               (11U)                               
-#define RCC_CIR_HSERDYIE_Msk               (0x1UL << RCC_CIR_HSERDYIE_Pos)      /*!< 0x00000800 */
-#define RCC_CIR_HSERDYIE                   RCC_CIR_HSERDYIE_Msk                
-#define RCC_CIR_PLLRDYIE_Pos               (12U)                               
+    Registers font if needed.  Then draws the string,
+    and a box around it derived from the stringWidth functiongöôôôôôÈ?r@   r   r   )r'   r(   N)Z	saveStater   ZgetFont⁄KeyErrorr                            
 #define RCC_CIR_PLLRDYIE_Msk               (0x1UL << RCC_CIR_PLLRDYIE_Pos)      /*!< 0x00001000 */
 #define RCC_CIR_PLLRDYIE                   RCC_CIR_PLLRDYIE_Msk                
 #define RCC_CIR_PLLI2SRDYIE_Pos            (13U)                               

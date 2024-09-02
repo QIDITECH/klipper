@@ -1,14 +1,18 @@
-<p align="center"><img src="https://github.com/QIDITECH/QIDI_MAX3/blob/main/other/QIDI.png" height="240" alt="QIDI's logo" /></p>
-<p align="center"><a href="LICENSE"><img alt="GPL-V3.0 License" src="https://github.com/QIDITECH/QIDI_MAX3/blob/main/other/qidi.svg"></a></p>
+Welcome to the Klipper project!
 
-# Introduction
-QIDI's 3D printers are based on open-source software such as Klipper and Moonraker, with some modifications to meet our specific requirements.
+[![Klipper](docs/img/klipper-logo-small.png)](https://www.klipper3d.org/)
 
-We extend our gratitude to the developers and maintainers of these open-source projects and encourage users to explore or support these great projects.
-- <a href="https://github.com/Klipper3d/klipper">**Klipper**</a>
-- <a href="https://github.com/Arksine/moonraker">**Moonraker**</a>
+https://www.klipper3d.org/
 
-**Note:** Please avoid using Kiauh or git to manually update Klipper, Moonraker, as this may cause the printer to malfunction.
+Klipper is a 3d-Printer firmware. It combines the power of a general
+purpose computer with one or more micro-controllers. See the
+[features document](https://www.klipper3d.org/Features.html) for more
+information on why you should use Klipper.
 
-## Report Issues and Make Suggestions
-You can contact [After-Sales Service](https://qidi3d.com/pages/warranty-policy-after-sales-support) to report issues and make suggestions. Alternatively, you can post an issue in this repository, our developers will reply to you directly.
+To begin using Klipper start by
+[installing](https://www.klipper3d.org/Installation.html) it.
+
+Klipper is Free Software. See the [license](COPYING) or read the
+[documentation](https://www.klipper3d.org/Overview.html). We depend on
+the generous support from our
+[sponsors](https://www.klipper3d.org/Sponsors.html).

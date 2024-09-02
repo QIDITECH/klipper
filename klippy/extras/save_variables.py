@@ -12,12 +12,37 @@ class SaveVariables:
         self.filename = os.path.expanduser(config.get('filename'))
         self.allVariables = {}
         try:
+            if not os.path.exists(self.filename):
+                open(self.filename, "w").close()
             self.loadVariables()
         except self.printer.command_error as e:
             raise config.error(str(e))
         gcode = self.printer.lookup_object('gcode')
         gcode.register_command('SAVE_VARIABLE', self.cmd_SAVE_VARIABLE,
                                desc=self.cmd_SAVE_VARIABLE_help)
+    def load_variable(self, section, option):
+        varfile = configparser.ConfigParser()
+        try:
+            varfile.read(self.filename)
+            return varfile.get(section, option)
+        except:
+            msg = "Unable to parse existing variable file"
+            logging.exception(msg)
+            raise self.printer.command_error(msg)
+    def save_variable(self, section, option, value):
+        varfile = configparser.ConfigParser()
+        try:
+            varfile.read(self.filename)
+            if not varfile.has_section(section):
+                varfile.add_section(section)
+            varfile.set(section, option, value)
+            with open(self.filename, 'w') as configfile:
+                varfile.write(configfile)
+        except Exception as e:
+            msg = "Unable to save variable"
+            logging.exception(msg)
+            raise self.printer.command_error(msg)
+        self.loadVariables()
     def loadVariables(self):
         allvars = {}
         varfile = configparser.ConfigParser()
@@ -54,7 +79,6 @@ class SaveVariables:
             msg = "Unable to save variable"
             logging.exception(msg)
             raise gcmd.error(msg)
-        gcmd.respond_info("Variable Saved")
         self.loadVariables()
     def get_status(self, eventtime):
         return {'variables': self.allVariables}

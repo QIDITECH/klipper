@@ -6,13 +6,15 @@
 
 #include "board/armcm_boot.h" // armcm_main
 #include "board/irq.h" // irq_disable
-#include "board/usb_cdc.h" // usb_request_bootloader
+#include "board/misc.h" // bootloader_request
 #include "command.h" // DECL_COMMAND_FLAGS
 #include "internal.h" // WDT
 #include "sched.h" // sched_main
 
 #define FREQ_PERIPH_DIV (CONFIG_MACH_SAME70 ? 2 : 1)
 #define FREQ_PERIPH (CONFIG_CLOCK_FREQ / FREQ_PERIPH_DIV)
+
+#define FREQ_SAME70_CAN 80000000
 
 /****************************************************************
  * watchdog handler
@@ -62,6 +64,10 @@ enable_pclock(uint32_t id)
 uint32_t
 get_pclock_frequency(uint32_t id)
 {
+#if CONFIG_MACH_SAME70
+    if (id == MCAN0_CLOCK_ID || id == MCAN1_CLOCK_ID)
+        return FREQ_SAME70_CAN;
+#endif
     return FREQ_PERIPH;
 }
 
@@ -94,7 +100,7 @@ DECL_COMMAND_FLAGS(command_reset, HF_IN_SHUTDOWN, "reset");
 #endif
 
 void noinline __aligned(16) // align for predictable flash code access
-usb_request_bootloader(void)
+bootloader_request(void)
 {
     irq_disable();
     // Request boot from ROM (instead of boot from flash)

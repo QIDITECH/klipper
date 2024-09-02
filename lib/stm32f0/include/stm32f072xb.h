@@ -8534,297 +8534,213 @@ typedef struct
 #define RTC_TSTR_ST_2                (0x4U << RTC_TSTR_ST_Pos)                 /*!< 0x00000040 */
 #define RTC_TSTR_SU_Pos              (0U)                                      
 #define RTC_TSTR_SU_Msk              (0xFU << RTC_TSTR_SU_Pos)                 /*!< 0x0000000F */
-#define RTC_TSTR_SU                  RTC_TSTR_SU_Msk                           
-#define RTC_TSTR_SU_0                (0x1U << RTC_TSTR_SU_Pos)                 /*!< 0x00000001 */
-#define RTC_TSTR_SU_1                (0x2U << RTC_TSTR_SU_Pos)                 /*!< 0x00000002 */
-#define RTC_TSTR_SU_2                (0x4U << RTC_TSTR_SU_Pos)                 /*!< 0x00000004 */
-#define RTC_TSTR_SU_3                (0x8U << RTC_TSTR_SU_Pos)                 /*!< 0x00000008 */
+#define RTC_TSTR_SU                  B
+    Ü/`O  ã               @   sÚ  d Z ddlZddddddd	d
+gZd<dd„Zd=dd„Zdd„ Zdd„ ZeZdd„ ZeZ	dd„ Z
+dedddfdd„Zeddfdd„Zdd„ Zdd	„ ZG dd„ deƒZdd„ Zd d!„ Zd"d#„ Zd$d%„ Zd&d'„ Zd(d)„ Zd>d+d„Zd?d,d„ZG d-d.„ d.eƒZG d/d
+„ d
+eƒZd0d1„ Zy0dd2lmZm Z m!Z!mZmZm"Z" e Z#e!Z$d3Z%W n2 e&k
+rn   g Zd4Z#i Z$d*a'd5d6„ Z"dZ%Y nX eej(ƒ e%sÔe)ed7ƒsÔed4e*d8d*d9 ed:e*d*d; ed:e+d*d; ed:e,d*d; ed:e-d*d; [%dS )@z&Python part of the warnings subsystem.é    NÚwarnÚwarn_explicitÚshowwarningÚformatwarningÚfilterwarningsÚsimplefilterÚresetwarningsÚcatch_warningsc             C   s   t | |||||ƒ}t|ƒ dS )z7Hook to write a warning to a file; replace if you like.N)ÚWarningMessageÚ_showwarnmsg_impl)ÚmessageÚcategoryÚfilenameÚlinenoÚfileÚlineÚmsg© r   ú1/home/mks/moonraker-env/lib/python3.7/warnings.pyr   
+   s    c             C   s   t | |||d|ƒ}t|ƒS )z.Function to format a warning the standard way.N)r
+   Ú_formatwarnmsg_impl)r   r   r   r   r   r   r   r   r   r      s    c             C   sP   | j }|d kr tj}|d kr d S t| ƒ}y| |¡ W n tk
+rJ   Y nX d S )N)r   ÚsysÚstderrÚ_formatwarnmsgÚwriteÚOSError)r   r   Útextr   r   r   r      s    r   c       	   	   C   s   | j j}| j› d| j› d|› d| j› d}| jd krpydd l}| | j| j¡}W qv tk
+rl   d }d }Y qvX n| j}|r| 	¡ }|d| 7 }| j
+d k	rœydd l}W n tk
+rÂ   d}d }Y n4X | ¡ }y| | j
+¡}W n tk
+rô   d }Y nX |d k	rˆ|d7 }x’|D ]t}|d|j|jf 7 }y$|d k	rD| |j|j¡}nd }W n tk
+rd   d }Y nX |r| 	¡ }|d	| 7 }qW n|sœ||› d
+7 }|S )Nú:z: Ú
+r   z  %s
+Tz-Object allocated at (most recent call last):
+z  File "%s", lineno %s
+z    %s
+z<: Enable tracemalloc to get the object allocation traceback
+)r   Ú__name__r   r   r   r   Ú	linecacheÚgetlineÚ	ExceptionÚstripÚsourceÚtracemallocZ
+is_tracingZget_object_traceback)	r   r   Úsr   r   r$   ZtracingÚtbÚframer   r   r   r   #   sR    "
+
+
+
+
+
+
+r   c             C   sd   yt }W n tk
+r   Y n<X |tk	rXt|ƒs6tdƒ‚|| j| j| j| j| j	| j
+ƒ dS t| ƒ dS )z7Hook to write a warning to a file; replace if you like.z:warnings.showwarning() must be set to a function or methodN)r   Ú	NameErrorÚ_showwarning_origÚcallableÚ	TypeErrorr   r   r   r   r   r   r   )r   Zswr   r   r   Ú_showwarnmsg`   s    r,   c             C   sH   yt }W n tk
+r   Y n$X |tk	r@|| j| j| j| j| jƒS t| ƒS )z.Function to format a warning the standard way.)	r   r(   Ú_formatwarning_origr   r   r   r   r   r   )r   Zfwr   r   r   r   u   s    
+r   Ú Fc             C   sÌ   | dkst d| f ƒ‚t|tƒs(t dƒ‚t|tƒs:t dƒ‚t|tƒsLt dƒ‚t|tƒs^t dƒ‚t|tƒrp|dksxt dƒ‚|s€|rˆdd	l}|rœ| ||j	¡}nd	}|r°| |¡}nd	}t
+| |||||d
+ d	S )aÖ  Insert an entry into the list of warnings filters (at the front).
 
-/********************  Bits definition for RTC_TSDR register  ****************/
-#define RTC_TSDR_WDU_Pos             (13U)                                     
-#define RTC_TSDR_WDU_Msk             (0x7U << RTC_TSDR_WDU_Pos)                /*!< 0x0000E000 */
-#define RTC_TSDR_WDU                 RTC_TSDR_WDU_Msk                          
-#define RTC_TSDR_WDU_0               (0x1U << RTC_TSDR_WDU_Pos)                /*!< 0x00002000 */
-#define RTC_TSDR_WDU_1               (0x2U << RTC_TSDR_WDU_Pos)                /*!< 0x00004000 */
-#define RTC_TSDR_WDU_2               (0x4U << RTC_TSDR_WDU_Pos)                /*!< 0x00008000 */
-#define RTC_TSDR_MT_Pos              (12U)                                     
-#define RTC_TSDR_MT_Msk              (0x1U << RTC_TSDR_MT_Pos)                 /*!< 0x00001000 */
-#define RTC_TSDR_MT                  RTC_TSDR_MT_Msk                           
-#define RTC_TSDR_MU_Pos              (8U)                                      
-#define RTC_TSDR_MU_Msk              (0xFU << RTC_TSDR_MU_Pos)                 /*!< 0x00000F00 */
-#define RTC_TSDR_MU                  RTC_TSDR_MU_Msk                           
-#define RTC_TSDR_MU_0                (0x1U << RTC_TSDR_MU_Pos)                 /*!< 0x00000100 */
-#define RTC_TSDR_MU_1                (0x2U << RTC_TSDR_MU_Pos)                 /*!< 0x00000200 */
-#define RTC_TSDR_MU_2                (0x4U << RTC_TSDR_MU_Pos)                 /*!< 0x00000400 */
-#define RTC_TSDR_MU_3                (0x8U << RTC_TSDR_MU_Pos)                 /*!< 0x00000800 */
-#define RTC_TSDR_DT_Pos              (4U)                                      
-#define RTC_TSDR_DT_Msk              (0x3U << RTC_TSDR_DT_Pos)                 /*!< 0x00000030 */
-#define RTC_TSDR_DT                  RTC_TSDR_DT_Msk                           
-#define RTC_TSDR_DT_0                (0x1U << RTC_TSDR_DT_Pos)                 /*!< 0x00000010 */
-#define RTC_TSDR_DT_1                (0x2U << RTC_TSDR_DT_Pos)                 /*!< 0x00000020 */
-#define RTC_TSDR_DU_Pos              (0U)                                      
-#define RTC_TSDR_DU_Msk              (0xFU << RTC_TSDR_DU_Pos)                 /*!< 0x0000000F */
-#define RTC_TSDR_DU                  RTC_TSDR_DU_Msk                           
-#define RTC_TSDR_DU_0                (0x1U << RTC_TSDR_DU_Pos)                 /*!< 0x00000001 */
-#define RTC_TSDR_DU_1                (0x2U << RTC_TSDR_DU_Pos)                 /*!< 0x00000002 */
-#define RTC_TSDR_DU_2                (0x4U << RTC_TSDR_DU_Pos)                 /*!< 0x00000004 */
-#define RTC_TSDR_DU_3                (0x8U << RTC_TSDR_DU_Pos)                 /*!< 0x00000008 */
+    'action' -- one of "error", "ignore", "always", "default", "module",
+                or "once"
+    'message' -- a regex that the warning message must match
+    'category' -- a class that the warning must be a subclass of
+    'module' -- a regex that the module name must match
+    'lineno' -- an integer line number, 0 matches all warnings
+    'append' -- if true, append to the list of filters
+    )ÚerrorÚignoreÚalwaysÚdefaultÚmoduleÚoncezinvalid action: %rzmessage must be a stringzcategory must be a classz#category must be a Warning subclasszmodule must be a stringr   zlineno must be an int >= 0N)Úappend)ÚAssertionErrorÚ
+isinstanceÚstrÚtypeÚ
+issubclassÚWarningÚintÚreÚcompileÚIÚ_add_filter)Úactionr   r   r3   r   r5   r=   r   r   r   r   ‚   s"    
+c             C   sH   | dkst d| f ƒ‚t|tƒr(|dks0t dƒ‚t| d|d||d dS )a  Insert a simple entry into the list of warnings filters (at the front).
 
-/********************  Bits definition for RTC_TSSSR register  ***************/
-#define RTC_TSSSR_SS_Pos             (0U)                                      
-#define RTC_TSSSR_SS_Msk             (0xFFFFU << RTC_TSSSR_SS_Pos)             /*!< 0x0000FFFF */
-#define RTC_TSSSR_SS                 RTC_TSSSR_SS_Msk                          
+    A simple filter matches all modules and messages.
+    'action' -- one of "error", "ignore", "always", "default", "module",
+                or "once"
+    'category' -- a class that the warning must be a subclass of
+    'lineno' -- an integer line number, 0 matches all warnings
+    'append' -- if true, append to the list of filters
+    )r/   r0   r1   r2   r3   r4   zinvalid action: %rr   zlineno must be an int >= 0N)r5   )r6   r7   r<   r@   )rA   r   r   r5   r   r   r   r   ¥   s
+    
 
-/********************  Bits definition for RTC_CALR register  ****************/
-#define RTC_CALR_CALP_Pos            (15U)                                     
-#define RTC_CALR_CALP_Msk            (0x1U << RTC_CALR_CALP_Pos)               /*!< 0x00008000 */
-#define RTC_CALR_CALP                RTC_CALR_CALP_Msk                         
-#define RTC_CALR_CALW8_Pos           (14U)                                     
-#define RTC_CALR_CALW8_Msk           (0x1U << RTC_CALR_CALW8_Pos)              /*!< 0x00004000 */
-#define RTC_CALR_CALW8               RTC_CALR_CALW8_Msk                        
-#define RTC_CALR_CALW16_Pos          (13U)                                     
-#define RTC_CALR_CALW16_Msk          (0x1U << RTC_CALR_CALW16_Pos)             /*!< 0x00002000 */
-#define RTC_CALR_CALW16              RTC_CALR_CALW16_Msk                       
-#define RTC_CALR_CALM_Pos            (0U)                                      
-#define RTC_CALR_CALM_Msk            (0x1FFU << RTC_CALR_CALM_Pos)             /*!< 0x000001FF */
-#define RTC_CALR_CALM                RTC_CALR_CALM_Msk                         
-#define RTC_CALR_CALM_0              (0x001U << RTC_CALR_CALM_Pos)             /*!< 0x00000001 */
-#define RTC_CALR_CALM_1              (0x002U << RTC_CALR_CALM_Pos)             /*!< 0x00000002 */
-#define RTC_CALR_CALM_2              (0x004U << RTC_CALR_CALM_Pos)             /*!< 0x00000004 */
-#define RTC_CALR_CALM_3              (0x008U << RTC_CALR_CALM_Pos)             /*!< 0x00000008 */
-#define RTC_CALR_CALM_4              (0x010U << RTC_CALR_CALM_Pos)             /*!< 0x00000010 */
-#define RTC_CALR_CALM_5              (0x020U << RTC_CALR_CALM_Pos)             /*!< 0x00000020 */
-#define RTC_CALR_CALM_6              (0x040U << RTC_CALR_CALM_Pos)             /*!< 0x00000040 */
-#define RTC_CALR_CALM_7              (0x080U << RTC_CALR_CALM_Pos)             /*!< 0x00000080 */
-#define RTC_CALR_CALM_8              (0x100U << RTC_CALR_CALM_Pos)             /*!< 0x00000100 */
+c             G   sR   | s6yt  |¡ W n tk
+r&   Y nX t  d|¡ n|t krHt  |¡ tƒ  d S )Nr   )ÚfiltersÚremoveÚ
+ValueErrorÚinsertr5   Ú_filters_mutated)r5   Úitemr   r   r   r@   µ   s    
+r@   c               C   s   g t dd…< tƒ  dS )zAClear the list of warning filters, so that no filters are active.N)rB   rF   r   r   r   r   r   Ã   s    c               @   s   e Zd ZdZdS )Ú_OptionErrorz,Exception used by option processing helpers.N)r   Ú
+__module__Ú__qualname__Ú__doc__r   r   r   r   rH   È   s   rH   c             C   sR   xL| D ]D}yt |ƒ W q tk
+rH } ztd|tjd W d d }~X Y qX qW d S )NzInvalid -W option ignored:)r   )Ú
+_setoptionrH   Úprintr   r   )ÚargsÚargr   r   r   r   Ú_processoptionsÍ   s
+    
+rP   c          	   C   sğ   dd l }|  d¡}t|ƒdkr,td| f ƒ‚xt|ƒdk rF| d¡ q.W dd„ |D ƒ\}}}}}t|ƒ}| |¡}t|ƒ}| |¡}|r|d }|rØyt|ƒ}|dk rªt	‚W qÜ t	t
+fk
+rÔ   td	|f ƒd ‚Y qÜX nd}t|||||ƒ d S )
+Nr   r   é   ztoo many fields (max 5): %rr.   c             S   s   g | ]}|  ¡ ‘qS r   )r"   )Ú.0r%   r   r   r   ú
+<listcomp>Ü   s   z_setoption.<locals>.<listcomp>ú$zinvalid lineno %r)r=   ÚsplitÚlenrH   r5   Ú
+_getactionZescapeÚ_getcategoryr<   rD   ÚOverflowErrorr   )rO   r=   ÚpartsrA   r   r   r3   r   r   r   r   rL   Õ   s.    
+
+
+rL   c             C   sB   | sdS | dkrdS xdD ]}|  | ¡r|S qW td| f ƒ‚d S )Nr2   Úallr1   )r2   r1   r0   r3   r4   r/   zinvalid action: %r)Ú
+startswithrH   )rA   Úar   r   r   rW   ğ   s     
+
+rW   c             C   s   dd l }| stS | d| ¡rPyt| ƒ}W qä tk
+rL   td| f ƒd ‚Y qäX n”|  d¡}| d |… }| |d d … }yt|d d |gƒ}W n$ tk
+r®   td|f ƒd ‚Y nX yt	||ƒ}W n$ t
+k
+râ   td| f ƒd ‚Y nX t|tƒsütd| f ƒ‚|S )Nr   z^[a-zA-Z0-9_]+$zunknown warning category: %rÚ.é   zinvalid module name: %rzinvalid warning category: %r)r=   r;   ÚmatchÚevalr(   rH   ÚrfindÚ
+__import__ÚImportErrorÚgetattrÚAttributeErrorr:   )r   r=   ÚcatÚir3   ZklassÚmr   r   r   rX   ú   s,    
+
+rX   c             C   s   | j j}d|kod|kS )zFSignal whether the frame is an internal CPython implementation detail.Ú	importlibÚ
+_bootstrap)Úf_codeÚco_filename)r'   r   r   r   r   Ú_is_internal_frame  s    rn   c             C   s&   | j } x| dk	r t| ƒr | j } qW | S )z;Find the next frame that doesn't involve CPython internals.N)Úf_backrn   )r'   r   r   r   Ú_next_external_frame  s    
+rp   r_   c          	   C   sv  t | tƒr| j}|dkrt}t |tƒr0t|tƒsDtd t|ƒj¡ƒ‚yZ|dks\t	t
+ d¡ƒrht
+ |¡}n4t
+ d¡}x(t|d ƒD ]}t|ƒ}|dkr€t‚q€W W n tk
+r¼   t
+j}d}Y nX |j}|j}d|krÜ|d }nd}| d¡}	|	r|	 ¡ }
+|
+ d¡rP|	dd… }	n>|d	krFyt
+jd
+ }	W n tk
+rD   d	}	Y nX |	sP|}	| di ¡}t| ||	|||||ƒ dS )z:Issue a warning, or maybe ignore it or raise an exception.Nz/category must be a Warning subclass, not '{:s}'r_   r   z<string>Ú__file__z.pycéÿÿÿÿÚ__main__r   Z__warningregistry__)r7   r;   Ú	__class__ÚUserWarningr9   r:   r+   Úformatr   rn   r   Ú	_getframeÚrangerp   rD   Ú__dict__Ú	f_globalsÚf_linenoÚgetÚlowerÚendswithÚargvrf   Ú
+setdefaultr   )r   r   Ú
+stacklevelr#   r'   ÚxÚglobalsr   r3   r   ZfnlÚregistryr   r   r   r   #  sL    
+
+
+
+
+
+
+c             C   sè  t |ƒ}|d kr8|pd}|dd …  ¡ dkr8|d d… }|d krDi }| dd¡tkrd| ¡  t|d< t| tƒr~t| ƒ}| j}n| }|| ƒ} |||f}	| |	¡r¢d S x^t	D ]R}
+|
+\}}}}}|d ksÌ| 
+|¡r¨t||ƒr¨|d ksè| 
+|¡r¨|dksø||kr¨P q¨W t}|dkrd S dd l}| ||¡ |dkr2| ‚|dkrfd	||	< ||f}t |¡r\d S d	t|< nf|d
+krrnZ|dkr¨d	||	< ||df}| |¡rd S d	||< n$|dkr¼d	||	< ntd||
+f ƒ‚t| ||||ƒ}t|ƒ d S )Nz	<unknown>éıÿÿÿz.pyÚversionr   r0   r/   r4   r_   r1   r3   r2   z1Unrecognized action (%r) in warnings.filters:
+ %s)r<   r}   r|   Ú_filters_versionÚclearr7   r;   r8   rt   rB   r`   r:   Údefaultactionr   ZgetlinesÚonceregistryÚRuntimeErrorr
+   r,   )r   r   r   r   r3   r„   Zmodule_globalsr#   r   ÚkeyrG   rA   r   rg   ÚmodZlnr   ZoncekeyZaltkeyr   r   r   r   W  sj    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+c               @   s"   e Zd ZdZddd„Zdd„ ZdS )r
+   )r   r   r   r   r   r   r#   Nc             C   s>   || _ || _|| _|| _|| _|| _|| _|r4|jnd | _d S )N)	r   r   r   r   r   r   r#   r   Ú_category_name)Úselfr   r   r   r   r   r   r#   r   r   r   Ú__init__£  s    zWarningMessage.__init__c             C   s   d| j | j| j| j| jf S )NzD{message : %r, category : %r, filename : %r, lineno : %s, line : %r})r   r   r   r   r   )r   r   r   r   Ú__str__®  s    zWarningMessage.__str__)NNN)r   rI   rJ   Z_WARNING_DETAILSr   r‘   r   r   r   r   r
+     s    
 
-/********************  Bits definition for RTC_TAFCR register  ***************/
-#define RTC_TAFCR_PC15MODE_Pos       (23U)                                     
-#define RTC_TAFCR_PC15MODE_Msk       (0x1U << RTC_TAFCR_PC15MODE_Pos)          /*!< 0x00800000 */
-#define RTC_TAFCR_PC15MODE           RTC_TAFCR_PC15MODE_Msk                    
-#define RTC_TAFCR_PC15VALUE_Pos      (22U)                                     
-#define RTC_TAFCR_PC15VALUE_Msk      (0x1U << RTC_TAFCR_PC15VALUE_Pos)         /*!< 0x00400000 */
-#define RTC_TAFCR_PC15VALUE          RTC_TAFCR_PC15VALUE_Msk                   
-#define RTC_TAFCR_PC14MODE_Pos       (21U)                                     
-#define RTC_TAFCR_PC14MODE_Msk       (0x1U << RTC_TAFCR_PC14MODE_Pos)          /*!< 0x00200000 */
-#define RTC_TAFCR_PC14MODE           RTC_TAFCR_PC14MODE_Msk                    
-#define RTC_TAFCR_PC14VALUE_Pos      (20U)                                     
-#define RTC_TAFCR_PC14VALUE_Msk      (0x1U << RTC_TAFCR_PC14VALUE_Pos)         /*!< 0x00100000 */
-#define RTC_TAFCR_PC14VALUE          RTC_TAFCR_PC14VALUE_Msk                   
-#define RTC_TAFCR_PC13MODE_Pos       (19U)                                     
-#define RTC_TAFCR_PC13MODE_Msk       (0x1U << RTC_TAFCR_PC13MODE_Pos)          /*!< 0x00080000 */
-#define RTC_TAFCR_PC13MODE           RTC_TAFCR_PC13MODE_Msk                    
-#define RTC_TAFCR_PC13VALUE_Pos      (18U)                                     
-#define RTC_TAFCR_PC13VALUE_Msk      (0x1U << RTC_TAFCR_PC13VALUE_Pos)         /*!< 0x00040000 */
-#define RTC_TAFCR_PC13VALUE          RTC_TAFCR_PC13VALUE_Msk                   
-#define RTC_TAFCR_TAMPPUDIS_Pos      (15U)                                     
-#define RTC_TAFCR_TAMPPUDIS_Msk      (0x1U << RTC_TAFCR_TAMPPUDIS_Pos)         /*!< 0x00008000 */
-#define RTC_TAFCR_TAMPPUDIS          RTC_TAFCR_TAMPPUDIS_Msk                   
-#define RTC_TAFCR_TAMPPRCH_Pos       (13U)                                     
-#define RTC_TAFCR_TAMPPRCH_Msk       (0x3U << RTC_TAFCR_TAMPPRCH_Pos)          /*!< 0x00006000 */
-#define RTC_TAFCR_TAMPPRCH           RTC_TAFCR_TAMPPRCH_Msk                    
-#define RTC_TAFCR_TAMPPRCH_0         (0x1U << RTC_TAFCR_TAMPPRCH_Pos)          /*!< 0x00002000 */
-#define RTC_TAFCR_TAMPPRCH_1         (0x2U << RTC_TAFCR_TAMPPRCH_Pos)          /*!< 0x00004000 */
-#define RTC_TAFCR_TAMPFLT_Pos        (11U)                                     
-#define RTC_TAFCR_TAMPFLT_Msk        (0x3U << RTC_TAFCR_TAMPFLT_Pos)           /*!< 0x00001800 */
-#define RTC_TAFCR_TAMPFLT            RTC_TAFCR_TAMPFLT_Msk                     
-#define RTC_TAFCR_TAMPFLT_0          (0x1U << RTC_TAFCR_TAMPFLT_Pos)           /*!< 0x00000800 */
-#define RTC_TAFCR_TAMPFLT_1          (0x2U << RTC_TAFCR_TAMPFLT_Pos)           /*!< 0x00001000 */
-#define RTC_TAFCR_TAMPFREQ_Pos       (8U)                                      
-#define RTC_TAFCR_TAMPFREQ_Msk       (0x7U << RTC_TAFCR_TAMPFREQ_Pos)          /*!< 0x00000700 */
-#define RTC_TAFCR_TAMPFREQ           RTC_TAFCR_TAMPFREQ_Msk                    
-#define RTC_TAFCR_TAMPFREQ_0         (0x1U << RTC_TAFCR_TAMPFREQ_Pos)          /*!< 0x00000100 */
-#define RTC_TAFCR_TAMPFREQ_1         (0x2U << RTC_TAFCR_TAMPFREQ_Pos)          /*!< 0x00000200 */
-#define RTC_TAFCR_TAMPFREQ_2         (0x4U << RTC_TAFCR_TAMPFREQ_Pos)          /*!< 0x00000400 */
-#define RTC_TAFCR_TAMPTS_Pos         (7U)                                      
-#define RTC_TAFCR_TAMPTS_Msk         (0x1U << RTC_TAFCR_TAMPTS_Pos)            /*!< 0x00000080 */
-#define RTC_TAFCR_TAMPTS             RTC_TAFCR_TAMPTS_Msk                      
-#define RTC_TAFCR_TAMP3TRG_Pos       (6U)                                      
-#define RTC_TAFCR_TAMP3TRG_Msk       (0x1U << RTC_TAFCR_TAMP3TRG_Pos)          /*!< 0x00000040 */
-#define RTC_TAFCR_TAMP3TRG           RTC_TAFCR_TAMP3TRG_Msk                    
-#define RTC_TAFCR_TAMP3E_Pos         (5U)                                      
-#define RTC_TAFCR_TAMP3E_Msk         (0x1U << RTC_TAFCR_TAMP3E_Pos)            /*!< 0x00000020 */
-#define RTC_TAFCR_TAMP3E             RTC_TAFCR_TAMP3E_Msk                      
-#define RTC_TAFCR_TAMP2TRG_Pos       (4U)                                      
-#define RTC_TAFCR_TAMP2TRG_Msk       (0x1U << RTC_TAFCR_TAMP2TRG_Pos)          /*!< 0x00000010 */
-#define RTC_TAFCR_TAMP2TRG           RTC_TAFCR_TAMP2TRG_Msk                    
-#define RTC_TAFCR_TAMP2E_Pos         (3U)                                      
-#define RTC_TAFCR_TAMP2E_Msk         (0x1U << RTC_TAFCR_TAMP2E_Pos)            /*!< 0x00000008 */
-#define RTC_TAFCR_TAMP2E             RTC_TAFCR_TAMP2E_Msk                      
-#define RTC_TAFCR_TAMPIE_Pos         (2U)                                      
-#define RTC_TAFCR_TAMPIE_Msk         (0x1U << RTC_TAFCR_TAMPIE_Pos)            /*!< 0x00000004 */
-#define RTC_TAFCR_TAMPIE             RTC_TAFCR_TAMPIE_Msk                      
-#define RTC_TAFCR_TAMP1TRG_Pos       (1U)                                      
-#define RTC_TAFCR_TAMP1TRG_Msk       (0x1U << RTC_TAFCR_TAMP1TRG_Pos)          /*!< 0x00000002 */
-#define RTC_TAFCR_TAMP1TRG           RTC_TAFCR_TAMP1TRG_Msk                    
-#define RTC_TAFCR_TAMP1E_Pos         (0U)                                      
-#define RTC_TAFCR_TAMP1E_Msk         (0x1U << RTC_TAFCR_TAMP1E_Pos)            /*!< 0x00000001 */
-#define RTC_TAFCR_TAMP1E             RTC_TAFCR_TAMP1E_Msk                      
+r
+   c               @   s8   e Zd ZdZdddœdd„Zdd„ Zd	d
+„ Zdd„ ZdS )r	   a  A context manager that copies and restores the warnings filter upon
+    exiting the context.
 
-/* Reference defines */
-#define RTC_TAFCR_ALARMOUTTYPE               RTC_TAFCR_PC13VALUE
+    The 'record' argument specifies whether warnings should be captured by a
+    custom implementation of warnings.showwarning() and be appended to a list
+    returned by the context manager. Otherwise None is returned by the context
+    manager. The objects appended to the list are arguments whose attributes
+    mirror the arguments to showwarning().
 
-/********************  Bits definition for RTC_ALRMASSR register  ************/
-#define RTC_ALRMASSR_MASKSS_Pos      (24U)                                     
-#define RTC_ALRMASSR_MASKSS_Msk      (0xFU << RTC_ALRMASSR_MASKSS_Pos)         /*!< 0x0F000000 */
-#define RTC_ALRMASSR_MASKSS          RTC_ALRMASSR_MASKSS_Msk                   
-#define RTC_ALRMASSR_MASKSS_0        (0x1U << RTC_ALRMASSR_MASKSS_Pos)         /*!< 0x01000000 */
-#define RTC_ALRMASSR_MASKSS_1        (0x2U << RTC_ALRMASSR_MASKSS_Pos)         /*!< 0x02000000 */
-#define RTC_ALRMASSR_MASKSS_2        (0x4U << RTC_ALRMASSR_MASKSS_Pos)         /*!< 0x04000000 */
-#define RTC_ALRMASSR_MASKSS_3        (0x8U << RTC_ALRMASSR_MASKSS_Pos)         /*!< 0x08000000 */
-#define RTC_ALRMASSR_SS_Pos          (0U)                                      
-#define RTC_ALRMASSR_SS_Msk          (0x7FFFU << RTC_ALRMASSR_SS_Pos)          /*!< 0x00007FFF */
-#define RTC_ALRMASSR_SS              RTC_ALRMASSR_SS_Msk                       
+    The 'module' argument is to specify an alternative module to the module
+    named 'warnings' and imported under that name. This argument is only useful
+    when testing the warnings module itself.
 
-/********************  Bits definition for RTC_BKP0R register  ***************/
-#define RTC_BKP0R_Pos                (0U)                                      
-#define RTC_BKP0R_Msk                (0xFFFFFFFFU << RTC_BKP0R_Pos)            /*!< 0xFFFFFFFF */
-#define RTC_BKP0R                    RTC_BKP0R_Msk                             
+    FN)Úrecordr3   c            C   s(   || _ |dkrtjd n|| _d| _dS )zêSpecify whether to record warnings and if an alternative module
+        should be used other than sys.modules['warnings'].
 
-/********************  Bits definition for RTC_BKP1R register  ***************/
-#define RTC_BKP1R_Pos                (0U)                                      
-#define RTC_BKP1R_Msk                (0xFFFFFFFFU << RTC_BKP1R_Pos)            /*!< 0xFFFFFFFF */
-#define RTC_BKP1R                    RTC_BKP1R_Msk                             
+        For compatibility with Python 3.0, please consider all arguments to be
+        keyword-only.
 
-/********************  Bits definition for RTC_BKP2R register  ***************/
-#define RTC_BKP2R_Pos                (0U)                                      
-#define RTC_BKP2R_Msk                (0xFFFFFFFFU << RTC_BKP2R_Pos)            /*!< 0xFFFFFFFF */
-#define RTC_BKP2R                    RTC_BKP2R_Msk                             
-
-/********************  Bits definition for RTC_BKP3R register  ***************/
-#define RTC_BKP3R_Pos                (0U)                                      
-#define RTC_BKP3R_Msk                (0xFFFFFFFFU << RTC_BKP3R_Pos)            /*!< 0xFFFFFFFF */
-#define RTC_BKP3R                    RTC_BKP3R_Msk                             
-
-/********************  Bits definition for RTC_BKP4R register  ***************/
-#define RTC_BKP4R_Pos                (0U)                                      
-#define RTC_BKP4R_Msk                (0xFFFFFFFFU << RTC_BKP4R_Pos)            /*!< 0xFFFFFFFF */
-#define RTC_BKP4R                    RTC_BKP4R_Msk                             
-
-/******************** Number of backup registers ******************************/
-#define RTC_BKP_NUMBER                       0x00000005U
-
-/*****************************************************************************/
-/*                                                                           */
-/*                        Serial Peripheral Interface (SPI)                  */
-/*                                                                           */
-/*****************************************************************************/
-
-/*
- * @brief Specific device feature definitions (not present on all devices in the STM32F0 serie)
- */
-#define SPI_I2S_SUPPORT                       /*!< I2S support */
-
-/*******************  Bit definition for SPI_CR1 register  *******************/
-#define SPI_CR1_CPHA_Pos            (0U)                                       
-#define SPI_CR1_CPHA_Msk            (0x1U << SPI_CR1_CPHA_Pos)                 /*!< 0x00000001 */
-#define SPI_CR1_CPHA                SPI_CR1_CPHA_Msk                           /*!< Clock Phase */
-#define SPI_CR1_CPOL_Pos            (1U)                                       
-#define SPI_CR1_CPOL_Msk            (0x1U << SPI_CR1_CPOL_Pos)                 /*!< 0x00000002 */
-#define SPI_CR1_CPOL                SPI_CR1_CPOL_Msk                           /*!< Clock Polarity */
-#define SPI_CR1_MSTR_Pos            (2U)                                       
-#define SPI_CR1_MSTR_Msk            (0x1U << SPI_CR1_MSTR_Pos)                 /*!< 0x00000004 */
-#define SPI_CR1_MSTR                SPI_CR1_MSTR_Msk                           /*!< Master Selection */
-#define SPI_CR1_BR_Pos              (3U)                                       
-#define SPI_CR1_BR_Msk              (0x7U << SPI_CR1_BR_Pos)                   /*!< 0x00000038 */
-#define SPI_CR1_BR                  SPI_CR1_BR_Msk                             /*!< BR[2:0] bits (Baud Rate Control) */
-#define SPI_CR1_BR_0                (0x1U << SPI_CR1_BR_Pos)                   /*!< 0x00000008 */
-#define SPI_CR1_BR_1                (0x2U << SPI_CR1_BR_Pos)                   /*!< 0x00000010 */
-#define SPI_CR1_BR_2                (0x4U << SPI_CR1_BR_Pos)                   /*!< 0x00000020 */
-#define SPI_CR1_SPE_Pos             (6U)                                       
-#define SPI_CR1_SPE_Msk             (0x1U << SPI_CR1_SPE_Pos)                  /*!< 0x00000040 */
-#define SPI_CR1_SPE                 SPI_CR1_SPE_Msk                            /*!< SPI Enable */
-#define SPI_CR1_LSBFIRST_Pos        (7U)                                       
-#define SPI_CR1_LSBFIRST_Msk        (0x1U << SPI_CR1_LSBFIRST_Pos)             /*!< 0x00000080 */
-#define SPI_CR1_LSBFIRST            SPI_CR1_LSBFIRST_Msk                       /*!< Frame Format */
-#define SPI_CR1_SSI_Pos             (8U)                                       
-#define SPI_CR1_SSI_Msk             (0x1U << SPI_CR1_SSI_Pos)                  /*!< 0x00000100 */
-#define SPI_CR1_SSI                 SPI_CR1_SSI_Msk                            /*!< Internal slave select */
-#define SPI_CR1_SSM_Pos             (9U)                                       
-#define SPI_CR1_SSM_Msk             (0x1U << SPI_CR1_SSM_Pos)                  /*!< 0x00000200 */
-#define SPI_CR1_SSM                 SPI_CR1_SSM_Msk                            /*!< Software slave management */
-#define SPI_CR1_RXONLY_Pos          (10U)                                      
-#define SPI_CR1_RXONLY_Msk          (0x1U << SPI_CR1_RXONLY_Pos)               /*!< 0x00000400 */
-#define SPI_CR1_RXONLY              SPI_CR1_RXONLY_Msk                         /*!< Receive only */
-#define SPI_CR1_CRCL_Pos            (11U)                                      
-#define SPI_CR1_CRCL_Msk            (0x1U << SPI_CR1_CRCL_Pos)                 /*!< 0x00000800 */
-#define SPI_CR1_CRCL                SPI_CR1_CRCL_Msk                           /*!< CRC Length */
-#define SPI_CR1_CRCNEXT_Pos         (12U)                                      
-#define SPI_CR1_CRCNEXT_Msk         (0x1U << SPI_CR1_CRCNEXT_Pos)              /*!< 0x00001000 */
-#define SPI_CR1_CRCNEXT             SPI_CR1_CRCNEXT_Msk                        /*!< Transmit CRC next */
-#define SPI_CR1_CRCEN_Pos           (13U)                                      
-#define SPI_CR1_CRCEN_Msk           (0x1U << SPI_CR1_CRCEN_Pos)                /*!< 0x00002000 */
-#define SPI_CR1_CRCEN               SPI_CR1_CRCEN_Msk                          /*!< Hardware CRC calculation enable */
-#define SPI_CR1_BIDIOE_Pos          (14U)                                      
-#define SPI_CR1_BIDIOE_Msk          (0x1U << SPI_CR1_BIDIOE_Pos)               /*!< 0x00004000 */
-#define SPI_CR1_BIDIOE              SPI_CR1_BIDIOE_Msk                         /*!< Output enable in bidirectional mode */
-#define SPI_CR1_BIDIMODE_Pos        (15U)                                      
-#define SPI_CR1_BIDIMODE_Msk        (0x1U << SPI_CR1_BIDIMODE_Pos)             /*!< 0x00008000 */
-#define SPI_CR1_BIDIMODE            SPI_CR1_BIDIMODE_Msk                       /*!< Bidirectional data mode enable */
-
-/*******************  Bit definition for SPI_CR2 register  *******************/
-#define SPI_CR2_RXDMAEN_Pos         (0U)                                       
-#define SPI_CR2_RXDMAEN_Msk         (0x1U << SPI_CR2_RXDMAEN_Pos)              /*!< 0x00000001 */
-#define SPI_CR2_RXDMAEN             SPI_CR2_RXDMAEN_Msk                        /*!< Rx Buffer DMA Enable */
-#define SPI_CR2_TXDMAEN_Pos         (1U)                                       
-#define SPI_CR2_TXDMAEN_Msk         (0x1U << SPI_CR2_TXDMAEN_Pos)              /*!< 0x00000002 */
-#define SPI_CR2_TXDMAEN             SPI_CR2_TXDMAEN_Msk                        /*!< Tx Buffer DMA Enable */
-#define SPI_CR2_SSOE_Pos            (2U)                                       
-#define SPI_CR2_SSOE_Msk            (0x1U << SPI_CR2_SSOE_Pos)                 /*!< 0x00000004 */
-#define SPI_CR2_SSOE                SPI_CR2_SSOE_Msk                           /*!< SS Output Enable */
-#define SPI_CR2_NSSP_Pos            (3U)                                       
-#define SPI_CR2_NSSP_Msk            (0x1U << SPI_CR2_NSSP_Pos)                 /*!< 0x00000008 */
-#define SPI_CR2_NSSP                SPI_CR2_NSSP_Msk                           /*!< NSS pulse management Enable */
-#define SPI_CR2_FRF_Pos             (4U)                                       
-#define SPI_CR2_FRF_Msk             (0x1U << SPI_CR2_FRF_Pos)                  /*!< 0x00000010 */
-#define SPI_CR2_FRF                 SPI_CR2_FRF_Msk                            /*!< Frame Format Enable */
-#define SPI_CR2_ERRIE_Pos           (5U)                                       
-#define SPI_CR2_ERRIE_Msk           (0x1U << SPI_CR2_ERRIE_Pos)                /*!< 0x00000020 */
-#define SPI_CR2_ERRIE               SPI_CR2_ERRIE_Msk                          /*!< Error Interrupt Enable */
-#define SPI_CR2_RXNEIE_Pos          (6U)                                       
-#define SPI_CR2_RXNEIE_Msk          (0x1U << SPI_CR2_RXNEIE_Pos)               /*!< 0x00000040 */
-#define SPI_CR2_RXNEIE              SPI_CR2_RXNEIE_Msk                         /*!< RX buffer Not Empty Interrupt Enable */
-#define SPI_CR2_TXEIE_Pos           (7U)                                       
-#define SPI_CR2_TXEIE_Msk           (0x1U << SPI_CR2_TXEIE_Pos)                /*!< 0x00000080 */
-#define SPI_CR2_TXEIE               SPI_CR2_TXEIE_Msk                          /*!< Tx buffer Empty Interrupt Enable */
-#define SPI_CR2_DS_Pos              (8U)                                       
-#define SPI_CR2_DS_Msk              (0xFU << SPI_CR2_DS_Pos)                   /*!< 0x00000F00 */
-#define SPI_CR2_DS                  SPI_CR2_DS_Msk                             /*!< DS[3:0] Data Size */
-#define SPI_CR2_DS_0                (0x1U << SPI_CR2_DS_Pos)                   /*!< 0x00000100 */
-#define SPI_CR2_DS_1                (0x2U << SPI_CR2_DS_Pos)                   /*!< 0x00000200 */
-#define SPI_CR2_DS_2                (0x4U << SPI_CR2_DS_Pos)                   /*!< 0x00000400 */
-#define SPI_CR2_DS_3                (0x8U << SPI_CR2_DS_Pos)                   /*!< 0x00000800 */
-#define SPI_CR2_FRXTH_Pos           (12U)                                      
-#define SPI_CR2_FRXTH_Msk           (0x1U << SPI_CR2_FRXTH_Pos)                /*!< 0x00001000 */
-#define SPI_CR2_FRXTH               SPI_CR2_FRXTH_Msk                          /*!< FIFO reception Threshold */
-#define SPI_CR2_LDMARX_Pos          (13U)                                      
-#define SPI_CR2_LDMARX_Msk          (0x1U << SPI_CR2_LDMARX_Pos)               /*!< 0x00002000 */
-#define SPI_CR2_LDMARX              SPI_CR2_LDMARX_Msk                         /*!< Last DMA transfer for reception */
-#define SPI_CR2_LDMATX_Pos          (14U)                                      
-#define SPI_CR2_LDMATX_Msk          (0x1U << SPI_CR2_LDMATX_Pos)               /*!< 0x00004000 */
-#define SPI_CR2_LDMATX              SPI_CR2_LDMATX_Msk                         /*!< Last DMA transfer for transmission */
-
-/********************  Bit definition for SPI_SR register  *******************/
-#define SPI_SR_RXNE_Pos             (0U)                                       
-#define SPI_SR_RXNE_Msk             (0x1U << SPI_SR_RXNE_Pos)                  /*!< 0x00000001 */
-#define SPI_SR_RXNE                 SPI_SR_RXNE_Msk                            /*!< Receive buffer Not Empty */
-#define SPI_SR_TXE_Pos              (1U)                                       
-#define SPI_SR_TXE_Msk              (0x1U << SPI_SR_TXE_Pos)                   /*!< 0x00000002 */
-#define SPI_SR_TXE                  SPI_SR_TXE_Msk                             /*!< Transmit buffer Empty */
-#define SPI_SR_CHSIDE_Pos           (2U)                                       
-#define SPI_SR_CHSIDE_Msk           (0x1U << SPI_SR_CHSIDE_Pos)                /*!< 0x00000004 */
-#define SPI_SR_CHSIDE               SPI_SR_CHSIDE_Msk                          /*!< Channel side */
-#define SPI_SR_UDR_Pos              (3U)                                       
-#define SPI_SR_UDR_Msk              (0x1U << SPI_SR_UDR_Pos)                   /*!< 0x00000008 */
-#define SPI_SR_UDR                  SPI_SR_UDR_Msk                             /*!< Underrun flag */
-#define SPI_SR_CRCERR_Pos           (4U)                                       
-#define SPI_SR_CRCERR_Msk           (0x1U << SPI_SR_CRCERR_Pos)                /*!< 0x00000010 */
-#define SPI_SR_CRCERR               SPI_SR_CRCERR_Msk                          /*!< CRC Error flag */
-#define SPI_SR_MODF_Pos             (5U)                                       
-#define SPI_SR_MODF_Msk             (0x1U << SPI_SR_MODF_Pos)                  /*!< 0x00000020 */
-#define SPI_SR_MODF                 SPI_SR_MODF_Msk                            /*!< Mode fault */
-#define SPI_SR_OVR_Pos              (6U)                                       
-#define SPI_SR_OVR_Msk              (0x1U << SPI_SR_OVR_Pos)                   /*!< 0x00000040 */
+        NÚwarningsF)Ú_recordr   ÚmodulesÚ_moduleÚ_entered)r   r’   r3   r   r   r   r   Å  s    zcatch_warnings.__init__c             C   sP   g }| j r| d¡ | jtjd k	r4| d| j ¡ t| ƒj}d|d |¡f S )Nzrecord=Truer“   z	module=%rz%s(%s)z, )r”   r5   r–   r   r•   r9   r   Újoin)r   rN   Únamer   r   r   Ú__repr__Ñ  s    
+
+zcatch_warnings.__repr__c             C   s~   | j rtd|  ƒ‚d| _ | jj| _| jd d … | j_| j ¡  | jj| _| jj| _| j	rvg }|j
+| j_| jj| j_|S d S d S )NzCannot enter %r twiceT)r—   r‹   r–   rB   Ú_filtersrF   r   Ú_showwarningr   r”   r5   r)   )r   Zlogr   r   r   Ú	__enter__Ú  s    
+
+
+
+
+zcatch_warnings.__enter__c             G   s>   | j std|  ƒ‚| j| j_| j ¡  | j| j_| j| j_d S )Nz%Cannot exit %r without entering first)	r—   r‹   r›   r–   rB   rF   rœ   r   r   )r   Úexc_infor   r   r   Ú__exit__í  s    
+
+
+zcatch_warnings.__exit__)r   rI   rJ   rK   r   rš   r   rŸ   r   r   r   r   r	   ´  s
+   	c                sz   dˆ j › dg}ˆ jd k	rVdd l‰dd l}‡ ‡fdd„}| d¡ || t|ƒ ƒ¡7 }d |¡ d¡}t	|t
+d	ˆ d
+ d S )Nzcoroutine 'z' was never awaited
+r   c              3   s8   x2t ˆ jƒD ]$\} }}ˆ | |¡}| |||fV  qW d S )N)ÚreversedÚ	cr_originr    )r   r   Úfuncnamer   )Úcoror   r   r   Úextractı  s    z*_warn_unawaited_coroutine.<locals>.extractz-Coroutine created at (most recent call last)
+r.   r   é   )r   r   r#   )rJ   r¡   r   Ú	tracebackr5   Zformat_listÚlistr˜   Úrstripr   ÚRuntimeWarning)r£   Z	msg_linesr¦   r¤   r   r   )r£   r   r   Ú_warn_unawaited_coroutine÷  s    
+
+rª   )rB   Ú_defaultactionÚ_onceregistryr   r   rF   Tr2   c               C   s   t d7 a d S )Nr_   )r‡   r   r   r   r   rF   "  s    rF   Úgettotalrefcountrs   )r   r3   r5   r0   )r   r5   )NN)N)Nr_   N)NNNN).rK   r   Ú__all__r   r   r   r   r)   r,   r-   r   r;   r   r   r@   r   r!   rH   rP   rL   rW   rX   rn   rp   r   r   Úobjectr
+   r	   rª   Ú	_warningsrB   r«   r¬   rF   r‰   rŠ   Z_warnings_defaultsrd   r‡   ÚwarnoptionsÚhasattrÚDeprecationWarningÚPendingDeprecationWarningÚImportWarningÚResourceWarningr   r   r   r   Ú<module>   sh   
+
+;"
+	
+5 
+EC 
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ó
+ˆgŞbc           @` sÃ   d  d l  m Z m Z m Z d  d l m Z d  d l Z d  d l m Z d d l m	 Z	 d d l m
+ Z
+ d d	 l m Z d d
+ l m Z d d l m Z e j d ƒ Z e d „ Z e e ƒ Z d S(   i    (   t   absolute_importt   divisiont   unicode_literals(   t	   text_typeN(   t   copyi   (   t   basei   (   t	   _ihatexml(   t	   constants(   t
+   namespaces(   t   moduleFactoryFactoryu   {([^}]*)}(.*)c      
+   ` s  ˆ ‰ ˆ j  d ƒ j ‰ d t j f ‡ f d †  ƒ  Y‰ d ˆ f ‡ f d †  ƒ  Y‰  d ˆ f ‡ f d †  ƒ  Y‰ d ˆ f ‡ f d	 †  ƒ  Y‰ d
+ ˆ f ‡ f d †  ƒ  Y‰ ‡ f d †  ‰	 ‡ ‡ f d †  } d t j f ‡  ‡ ‡ ‡ ‡ ‡ ‡ ‡	 f d †  ƒ  Y} t ƒ  S(   Nu   asdt   Elementc           ` sé   e  Z d ‡  f d  † Z d „  Z d „  Z d „  Z e e e ƒ Z d „  Z	 d „  Z
+ e e
+ e	 ƒ Z d „  Z d „  Z e e e ƒ Z d „  Z d	 „  Z e e e ƒ Z d
+ „  Z d „  Z d „  Z d „  Z d d „ Z d „  Z d „  Z RS(   c         ` s‰   | |  _  | |  _ ˆ  j |  j | | ƒ ƒ |  _ | d  k rU t d |  j  f |  _ n |  j |  j  f |  _ d  |  _ g  |  _	 g  |  _
+ d  S(   Nu   html(   t   _namet
+   _namespaceR
+   t   _getETreeTagt   _elementt   NoneR   t	   nameTuplet   parentt   _childNodest   _flags(   t   selft   namet	   namespace(   t   ElementTree(    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   __init__   s    				c         S` s)   | d  k r | } n d | | f } | S(   Nu   {%s}%s(   R   (   R   R   R   t	   etree_tag(    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyR   %   s    	c         S` s+   | |  _  |  j |  j  |  j ƒ |  j _ d  S(   N(   R   R   R   R   t   tag(   R   R   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _setName,   s    	c         S` s   |  j  S(   N(   R   (   R   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _getName0   s    c         S` s+   | |  _  |  j |  j |  j  ƒ |  j _ d  S(   N(   R   R   R   R   R   (   R   R   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _setNamespace5   s    	c         S` s   |  j  S(   N(   R   (   R   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _getNamespace9   s    c         S` s
+   |  j  j S(   N(   R   t   attrib(   R   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _getAttributes>   s    c         S` sz   |  j  j } | j ƒ  | rv xW | j ƒ  D]F \ } } t | t ƒ r_ d | d | d f } n | } | | | <q) Wn  d  S(   Nu   {%s}%si   i   (   R   R   t   cleart   itemst
+   isinstancet   tuple(   R   t
+   attributest	   el_attribt   keyt   valueR   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _setAttributesA   s    
+c         S` s   |  j  S(   N(   R   (   R   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _getChildNodesP   s    c         S` s2   |  j  2g  |  _ x | D] } |  j | ƒ q Wd  S(   N(   R   R   t   insertChild(   R   R(   t   element(    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _setChildNodesS   s    	c         S` s   t  |  j j p t |  j ƒ ƒ S(   u,   Return true if the node has children or text(   t   boolR   t   textt   len(   R   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt
+   hasContent[   s    c         S` s0   |  j  j | ƒ |  j j | j ƒ |  | _ d  S(   N(   R   t   appendR   R   (   R   t   node(    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   appendChild_   s    c         S` s>   t  |  j ƒ j | j ƒ } |  j j | | j ƒ |  | _ d  S(   N(   t   listR   t   indext   insertR   (   R   R3   t   refNodeR6   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   insertBefored   s    c         S` s0   |  j  j | ƒ |  j j | j ƒ d  | _ d  S(   N(   R   t   removeR   R   R   (   R   R3   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   removeChildi   s    c         S` s-  t  |  j ƒ s? |  j j s* d |  j _ n  |  j j | 7_ nê | d  k r‡ |  j d j sn d |  j d _ n  |  j d j | 7_ n¢ t |  j ƒ } | j | j ƒ } | d k rü |  j | d j sß d |  j | d _ n  |  j | d j | 7_ n- |  j j sd |  j _ n  |  j j | 7_ d  S(   Nu    iÿÿÿÿi    i   (   R0   R   R/   R   t   tailR5   R6   (   R   t   dataR9   t   childrenR6   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt
+   insertTextn   s"    c         S` sF   t  |  ƒ |  j |  j ƒ } |  j j rB t |  j j ƒ | j _ n  | S(   N(   t   typeR   R   R   R   R   (   R   R,   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt	   cloneNode…   s    c         S` s–   | j  r+ | j  d j j |  j j 7_ nH | j j sF d | j _ n  |  j j d  k	 rs | j j |  j j 7_ n  d |  j _ t j j |  | ƒ d  S(   Niÿÿÿÿu    (   t
+   childNodesR   R<   R/   R   R   t   Nodet   reparentChildren(   R   t	   newParent(    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyRD   ‹   s    	"N(   t   __name__t
+   __module__R   R   R   R   R   t   propertyR   R   R   R   R    R)   R%   R*   R-   RB   R1   R4   R9   R;   R?   RA   RD   (    (   R   (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyR
+      s*   														t   Commentc           ` s8   e  Z ‡  f d  †  Z d „  Z d „  Z e e e ƒ Z RS(   c         ` s1   ˆ  j  | ƒ |  _ d  |  _ g  |  _ g  |  _ d  S(   N(   RI   R   R   R   R   R   (   R   R=   (   R   (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyR   —   s    		c         S` s
+   |  j  j S(   N(   R   R/   (   R   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _getDataŸ   s    c         S` s   | |  j  _ d  S(   N(   R   R/   (   R   R(   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _setData¢   s    (   RF   RG   R   RJ   RK   RH   R=   (    (   R   (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyRI   –   s   		t   DocumentTypec           ` sY   e  Z ‡  f d  †  Z d „  Z d „  Z e e e ƒ Z d „  Z d „  Z e e e ƒ Z	 RS(   c         ` s2   ˆ  j  |  d ƒ | |  j _ | |  _ | |  _ d  S(   Nu
+   <!DOCTYPE>(   R   R   R/   t   publicIdt   systemId(   R   R   RM   RN   (   R
+   (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyR   ¨   s    	c         S` s   |  j  j d d ƒ S(   Nu   publicIdu    (   R   t   get(   R   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _getPublicId®   s    c         S` s&   | d  k	 r" |  j j d | ƒ n  d  S(   Nu   publicId(   R   R   t   set(   R   R(   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _setPublicId±   s    c         S` s   |  j  j d d ƒ S(   Nu   systemIdu    (   R   RO   (   R   (    (    sF   /tmp/pip-install-SOs3my/pip/pip/_vendor/html5lib/treebuilders/etree.pyt   _getSystemId·   s    c         S` s&   | d  k	 r" |  j j d | ƒ n  d  S(   Nu   systemId(   R   R   RQ   (   R   R(   (    (    sF   /tmp/pip- /*!< 0x00000040 */
 #define SPI_SR_OVR                  SPI_SR_OVR_Msk                             /*!< Overrun flag */
 #define SPI_SR_BSY_Pos              (7U)                                       
 #define SPI_SR_BSY_Msk              (0x1U << SPI_SR_BSY_Pos)                   /*!< 0x00000080 */

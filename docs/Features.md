@@ -12,10 +12,10 @@ Klipper has several compelling features:
   kinematic estimations (such as the Bresenham algorithm) - instead it
   calculates precise step times based on the physics of acceleration
   and the physics of the machine kinematics. More precise stepper
-  movement translates to quieter and more stable printer operation.
+  movement provides quieter and more stable printer operation.
 
 * Best in class performance. Klipper is able to achieve high stepping
-  rates on both new and old micro-controllers. Even old 8bit
+  rates on both new and old micro-controllers. Even old 8-bit
   micro-controllers can obtain rates over 175K steps per second. On
   more recent micro-controllers, several million steps per second are
   possible. Higher stepper rates enable higher print velocities. The
@@ -53,7 +53,14 @@ Klipper has several compelling features:
   types of robots easier and it keeps timing precise even with complex
   kinematics (no "line segmentation" is needed).
 
-* Portable code. Klipper works on ARM, AVR, and PRU based
+* Klipper is hardware agnostic. One should get the same precise timing
+  independent of the low-level electronics hardware. The Klipper
+  micro-controller code is designed to faithfully follow the schedule
+  provided by the Klipper host software (or prominently alert the user
+  if it is unable to). This makes it easier to use available hardware,
+  to upgrade to new hardware, and to have confidence in the hardware.
+
+* Portable code. Klipper works on ARM, AVR, PRU, and other
   micro-controllers. Existing "reprap" style printers can run Klipper
   without hardware modification - just add a Raspberry Pi. Klipper's
   internal code layout makes it easier to support other
@@ -78,9 +85,10 @@ Klipper has several compelling features:
 
 Klipper supports many standard 3d printer features:
 
-* Works with Octoprint. This allows the printer to be controlled using
+* Several web interfaces available. Works with Mainsail, Fluidd,
+  OctoPrint and others. This allows the printer to be controlled using
   a regular web-browser. The same Raspberry Pi that runs Klipper can
-  also run Octoprint.
+  also run the web interface.
 
 * Standard G-Code support. Common g-code commands that are produced by
   typical "slicers" (SuperSlicer, Cura, PrusaSlicer, etc.) are
@@ -90,25 +98,31 @@ Klipper supports many standard 3d printer features:
   extruders on independent carriages (IDEX) are also supported.
 
 * Support for cartesian, delta, corexy, corexz, hybrid-corexy,
-  hybrid-corexz, rotary delta, polar, and cable winch style printers.
+  hybrid-corexz, deltesian, rotary delta, polar, and cable winch style
+  printers.
 
 * Automatic bed leveling support. Klipper can be configured for basic
   bed tilt detection or full mesh bed leveling. If the bed uses
   multiple Z steppers then Klipper can also level by independently
   manipulating the Z steppers. Most Z height probes are supported,
-  including BL-Touch probes and servo activated probes.
+  including BL-Touch probes and servo activated probes. Probes may be
+  calibrated for axis twist compensation.
 
 * Automatic delta calibration support. The calibration tool can
   perform basic height calibration as well as an enhanced X and Y
   dimension calibration. The calibration can be done with a Z height
   probe or via manual probing.
 
+* Run-time "exclude object" support. When configured, this module may
+  facilitate canceling of just one object in a multi-part print.
+
 * Support for common temperature sensors (eg, common thermistors,
   AD595, AD597, AD849x, PT100, PT1000, MAX6675, MAX31855, MAX31856,
-  MAX31865, BME280, HTU21D, DS18B20, and LM75). Custom thermistors and
-  custom analog temperature sensors can also be configured. One can
-  monitor the internal micro-controller temperature sensor and the
-  internal temperature sensor of a Raspberry Pi.
+  MAX31865, BME280, HTU21D, DS18B20, AHT10, and LM75). Custom
+  thermistors and custom analog temperature sensors can also be
+  configured. One can monitor the internal micro-controller
+  temperature sensor and the internal temperature sensor of a
+  Raspberry Pi.
 
 * Basic thermal heater protection enabled by default.
 
@@ -117,9 +131,9 @@ Klipper supports many standard 3d printer features:
   speed can be monitored on fans that have a tachometer.
 
 * Support for run-time configuration of TMC2130, TMC2208/TMC2224,
-  TMC2209, TMC2660, and TMC5160 stepper motor drivers. There is also
-  support for current control of traditional stepper drivers via
-  AD5206, MCP4451, MCP4728, MCP4018, and PWM pins.
+  TMC2209, TMC2240, TMC2660, and TMC5160 stepper motor drivers. There
+  is also support for current control of traditional stepper drivers
+  via AD5206, DAC084S085, MCP4451, MCP4728, MCP4018, and PWM pins.
 
 * Support for common LCD displays attached directly to the printer. A
   default menu is also available. The contents of the display and menu
@@ -139,8 +153,8 @@ Klipper supports many standard 3d printer features:
 * Support for filament presence sensors, filament motion sensors, and
   filament width sensors.
 
-* Support for measuring and recording acceleration using an adxl345
-  accelerometer.
+* Support for measuring and recording acceleration using adxl345,
+  mpu9250, mpu6050, and lis2dw12 accelerometers.
 
 * Support for limiting the top speed of short "zigzag" moves to reduce
   printer vibration and noise. See the [kinematics](Kinematics.md)
@@ -173,8 +187,10 @@ represent total number of steps per second on the micro-controller.
 | RP2040                          | 2400K             | 1636K             |
 | SAM4E8E                         | 2500K             | 1674K             |
 | SAMD51                          | 3077K             | 1885K             |
+| AR100                           | 3529K             | 2507K             |
 | STM32F407                       | 3652K             | 2459K             |
 | STM32F446                       | 3913K             | 2634K             |
+| STM32H743                       | 9091K             | 6061K             |
 
 If unsure of the micro-controller on a particular board, find the
 appropriate [config file](../config/), and look for the

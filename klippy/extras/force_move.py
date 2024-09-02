@@ -43,12 +43,12 @@ class ForceMove:
         gcode = self.printer.lookup_object('gcode')
         gcode.register_command('STEPPER_BUZZ', self.cmd_STEPPER_BUZZ,
                                desc=self.cmd_STEPPER_BUZZ_help)
-        gcode.register_command('SET_KINEMATIC_POSITION',
-                                   self.cmd_SET_KINEMATIC_POSITION,
-                                   desc=self.cmd_SET_KINEMATIC_POSITION_help)
         if config.getboolean("enable_force_move", False):
             gcode.register_command('FORCE_MOVE', self.cmd_FORCE_MOVE,
                                    desc=self.cmd_FORCE_MOVE_help)
+            gcode.register_command('SET_KINEMATIC_POSITION',
+                                   self.cmd_SET_KINEMATIC_POSITION,
+                                   desc=self.cmd_SET_KINEMATIC_POSITION_help)
     def register_stepper(self, config, mcu_stepper):
         self.steppers[mcu_stepper.get_name()] = mcu_stepper
     def lookup_stepper(self, name):
@@ -86,7 +86,8 @@ class ForceMove:
                           0., 0., 0., axis_r, 0., 0., 0., cruise_v, accel)
         print_time = print_time + accel_t + cruise_t + accel_t
         stepper.generate_steps(print_time)
-        self.trapq_finalize_moves(self.trapq, print_time + 99999.9)
+        self.trapq_finalize_moves(self.trapq, print_time + 99999.9,
+                                  print_time + 99999.9)
         stepper.set_trapq(prev_trapq)
         stepper.set_stepper_kinematics(prev_sk)
         toolhead.note_kinematic_activity(print_time)
@@ -131,7 +132,6 @@ class ForceMove:
         z = gcmd.get_float('Z', curpos[2])
         logging.info("SET_KINEMATIC_POSITION pos=%.3f,%.3f,%.3f", x, y, z)
         toolhead.set_position([x, y, z, curpos[3]], homing_axes=(0, 1, 2))
-    
 
 def load_config(config):
     return ForceMove(config)
