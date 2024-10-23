@@ -22,6 +22,8 @@ class HeaterCheck:
         self.hysteresis = config.getfloat('hysteresis', 5., minval=0.)
         self.max_error = config.getfloat('max_error', 120., minval=0.)
         self.heating_gain = config.getfloat('heating_gain', 2., above=0.)
+        self.position_z = config.getfloat('position_z', 9999., minval=0.)
+        logging.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA %f", self.position_z)
         default_gain_time = 20.
         if self.heater_name == 'heater_bed':
             default_gain_time = 60.
@@ -58,6 +60,7 @@ class HeaterCheck:
             return eventtime + 1.
         self.error += (target - self.hysteresis) - temp
         if not self.approaching_target:
+            logging.info("CCCCC self.error is %f", self.error)
             if target != self.last_target:
                 # Target changed - reset checks
                 logging.info("Heater %s approaching new target of %.3f",
@@ -66,8 +69,14 @@ class HeaterCheck:
                 self.goal_temp = temp + self.heating_gain
                 self.goal_systime = eventtime + self.check_gain_time
             elif self.error >= self.max_error:
-                # Failure due to inability to maintain target temperature
-                return self.heater_fault()
+                toolhead = self.printer.lookup_object('toolhead')
+                position_z = toolhead.get_position()[2]
+                logging.info("CCCCC position_z is %f", position_z)
+                if position_z > self.position_z:
+                    self.error = 0.
+                else:    
+                    # Failure due to inability to maintain target temperature
+                    return self.heater_fault()
         elif temp >= self.goal_temp:
             # Temperature approaching target - reset checks
             self.starting_approach = False

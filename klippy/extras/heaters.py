@@ -85,6 +85,16 @@ class Heater:
             adj_time = min(time_diff * self.inv_smooth_time, 1.)
             self.smoothed_temp += temp_diff * adj_time
             self.can_extrude = (self.smoothed_temp >= self.min_extrude_temp)
+
+        toolhead = self.printer.lookup_object("toolhead")
+        curtime = self.printer.get_reactor().monotonic()
+        position_z = toolhead.get_position()[2]
+        if position_z > 270. and "xyz" in toolhead.get_status(curtime)["homed_axes"]:
+            heaters = self.printer.lookup_object("heaters")
+            heater = heaters.lookup_heater("chamber")
+            if heater.target_temp > 0.:
+                heaters.set_temperature(heater, 0.)
+
         #logging.debug("temp: %.3f %f = %f", read_time, temp)
     # External commands
     def get_pwm_delay(self):
@@ -268,6 +278,7 @@ class PrinterHeaters:
         self.sensor_factories[sensor_type] = sensor_factory
     def setup_heater(self, config, gcode_id=None):
         heater_name = config.get_name().split()[-1]
+        logging.info("EEEEEEE %s", heater_name)
         if heater_name in self.heaters:
             raise config.error("Heater %s already registered" % (heater_name,))
         # Setup sensor
