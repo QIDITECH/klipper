@@ -27,6 +27,7 @@ class EncoderSensor:
         self.estimated_print_time = None
         # Initialise internal state
         self.filament_runout_pos = None
+        self.button_state = 0
         # Register commands and event handlers
         self.printer.register_event_handler('klippy:ready',
                 self._handle_ready)
@@ -36,12 +37,19 @@ class EncoderSensor:
                 self._handle_not_printing)
         self.printer.register_event_handler('idle_timeout:idle',
                 self._handle_not_printing)
+        self.gcode = self.printer.lookup_object('gcode')
+        self.gcode.register_command(
+            'CLEAR_MOTION_DATA',
+            self.cmd_CLEAR_MOTION_DATA
+        )
     def _update_filament_runout_pos(self, eventtime=None):
         if eventtime is None:
             eventtime = self.reactor.monotonic()
         self.filament_runout_pos = (
                 self._get_extruder_pos(eventtime) +
                 self.detection_length)
+    def cmd_CLEAR_MOTION_DATA(self, gcmd):
+        self._update_filament_runout_pos()
     def _handle_ready(self):
         self.extruder = self.printer.lookup_object(self.extruder_name)
         self.estimated_print_time = (
@@ -69,6 +77,7 @@ class EncoderSensor:
     def encoder_event(self, eventtime, state):
         if self.extruder is not None:
             self._update_filament_runout_pos(eventtime)
+            self.button_state = state
             # Check for filament insertion
             # Filament is always assumed to be present on an encoder event
             self.runout_helper.note_filament_present(True)

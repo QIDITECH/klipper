@@ -11,6 +11,28 @@ class SaveVariables:
         self.printer = config.get_printer()
         self.filename = os.path.expanduser(config.get('filename'))
         self.allVariables = {}
+        
+        self.default_values = {
+            'auto_reload_detect': 0, 'auto_read_rfid': 0, 'auto_init_detect': 0,
+            'box_count': 0, 'enable_box': 0,'load_retry_num': 0,
+            'slot_sync': "", 'retry_step': "", 'last_load_slot': ""
+        }
+        
+        for i in range(16):
+            self.default_values[f'filament_slot{i}'] = 0
+            self.default_values[f'color_slot{i}'] = 0
+            self.default_values[f'vendor_slot{i}'] = 0
+            self.default_values[f'slot{i}'] = 0
+            self.default_values[f'value_t{i}'] = ""
+            self.default_values[f'runout_{i}'] = 0
+        
+        self.default_values['filament_slot16'] = 0
+        self.default_values['color_slot16'] = 0
+        self.default_values['vendor_slot16'] = 0
+        
+        for key, value in self.default_values.items():
+            setattr(self, key, value)
+            
         try:
             if not os.path.exists(self.filename):
                 open(self.filename, "w").close()
@@ -20,6 +42,7 @@ class SaveVariables:
         gcode = self.printer.lookup_object('gcode')
         gcode.register_command('SAVE_VARIABLE', self.cmd_SAVE_VARIABLE,
                                desc=self.cmd_SAVE_VARIABLE_help)
+                               
     def load_variable(self, section, option):
         varfile = configparser.ConfigParser()
         try:
@@ -29,6 +52,7 @@ class SaveVariables:
             msg = "Unable to parse existing variable file"
             logging.exception(msg)
             raise self.printer.command_error(msg)
+            
     def save_variable(self, section, option, value):
         varfile = configparser.ConfigParser()
         try:
@@ -43,6 +67,7 @@ class SaveVariables:
             logging.exception(msg)
             raise self.printer.command_error(msg)
         self.loadVariables()
+        
     def loadVariables(self):
         allvars = {}
         varfile = configparser.ConfigParser()
@@ -56,7 +81,12 @@ class SaveVariables:
             logging.exception(msg)
             raise self.printer.command_error(msg)
         self.allVariables = allvars
+        
+        for key, default in self.default_values.items():
+            setattr(self, key, self.allVariables.get(key, default))
+            
     cmd_SAVE_VARIABLE_help = "Save arbitrary variables to disk"
+    
     def cmd_SAVE_VARIABLE(self, gcmd):
         varname = gcmd.get('VARIABLE')
         value = gcmd.get('VALUE')
@@ -80,8 +110,14 @@ class SaveVariables:
             logging.exception(msg)
             raise gcmd.error(msg)
         self.loadVariables()
+        
     def get_status(self, eventtime):
-        return {'variables': self.allVariables}
+        status = {'variables': self.allVariables}
+        
+        for key in self.default_values.keys():
+            status[key] = getattr(self, key)
+            
+        return status
 
 def load_config(config):
     return SaveVariables(config)

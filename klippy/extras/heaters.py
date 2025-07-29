@@ -11,7 +11,7 @@ import os, logging, threading
 ######################################################################
 
 KELVIN_TO_CELSIUS = -273.15
-MAX_HEAT_TIME = 5.0
+MAX_HEAT_TIME = 10.0
 AMBIENT_TEMP = 25.
 PID_PARAM_BASE = 255.
 
@@ -65,6 +65,7 @@ class Heater:
         gcode.register_mux_command("SET_HEATER_TEMPERATURE", "HEATER",
                                    self.name, self.cmd_SET_HEATER_TEMPERATURE,
                                    desc=self.cmd_SET_HEATER_TEMPERATURE_help)
+        self.can_wait = True
     def set_pwm(self, read_time, value):
         if self.target_temp <= 0.:
             value = 0.
@@ -166,7 +167,12 @@ class Heater:
                     msg = "The hotbed temperature is too low, and it will automatically heat up to " + str((temp+self.heat_with_heater_bed_tem_add))
                     gcmd.respond_info(msg)
         else:
-            pheaters.set_temperature(self, temp)
+            wait = bool(gcmd.get_int('WAIT', 0))
+            if not self.can_wait:
+                wait = False
+            pheaters.set_temperature(self, temp, wait)
+    def set_can_wait(self, value):
+        self.can_wait = value
 
 
 ######################################################################

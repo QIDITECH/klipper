@@ -7,6 +7,8 @@
 import sys, os, gc, optparse, logging, time, collections, importlib
 import util, reactor, queuelogger, msgproto
 import gcode, configfile, pins, mcu, toolhead, webhooks
+from extras import box_detect
+import pyudev, shutil, configparser
 
 message_ready = "Printer is ready"
 
@@ -112,9 +114,10 @@ class Printer:
         module_name = module_parts[0]
         py_name = os.path.join(os.path.dirname(__file__),
                                'extras', module_name + '.py')
+        so_name = os.path.join(os.path.dirname(__file__), 'extras', module_name + '.so')
         py_dirname = os.path.join(os.path.dirname(__file__),
                                   'extras', module_name, '__init__.py')
-        if not os.path.exists(py_name) and not os.path.exists(py_dirname):
+        if not os.path.exists(py_name) and not os.path.exists(so_name) and not os.path.exists(py_dirname):
             if default is not configfile.sentinel:
                 return default
             raise self.config_error("Unable to load module '%s'" % (section,))
@@ -139,6 +142,8 @@ class Printer:
             m.add_printer_objects(config)
         for section_config in config.get_prefix_sections(''):
             self.load_object(config, section_config.get_name(), None)
+        for m in [box_detect]:
+            m.add_printer_objects(config)
         for m in [toolhead]:
             m.add_printer_objects(config)
         # Validate that there are no undefined parameters in the config file
@@ -172,6 +177,7 @@ class Printer:
         return "\n".join(msg)
     def _connect(self, eventtime):
         try:
+            box_detect.monitor_serial_devices(self)
             self._read_config()
             self.send_event("klippy:mcu_identify")
             for cb in self.event_handlers.get("klippy:connect", []):
@@ -265,7 +271,6 @@ class Printer:
         if self.run_result is None:
             self.run_result = result
         self.reactor.end()
-
 
 ######################################################################
 # Startup
