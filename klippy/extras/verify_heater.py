@@ -32,6 +32,7 @@ class HeaterCheck:
         self.last_target = self.goal_temp = self.error = 0.
         self.goal_systime = self.printer.get_reactor().NEVER
         self.check_timer = None
+        self.is_box_heater = config.getboolean('is_box_heter',False)
     def handle_connect(self):
         if self.printer.get_start_args().get('debugoutput') is not None:
             # Disable verify_heater if outputting to a debug file
@@ -75,7 +76,11 @@ class HeaterCheck:
                     self.error = 0.
                 else:
                     # Failure due to inability to maintain target temperature
-                    return self.heater_fault()
+                    if self.is_box_heater and target > 0:
+                        self.box_heater_fault()
+                        return eventtime + 1.
+                    else:
+                        return self.heater_fault()
         elif heater_bed.heater_bed_state == 1 and self.heater_name == "chamber":
             self.error = 0.
             self.goal_temp = temp - self.heating_gain
@@ -99,6 +104,16 @@ class HeaterCheck:
         logging.error(msg)
         self.printer.invoke_shutdown(msg + HINT_THERMAL)
         return self.printer.get_reactor().NEVER
+    
+    def box_heater_fault(self):
+        msg = "Heater %s not heating at expected rate" % (self.heater_name,)
+        logging.error(msg)
+        self.printer.lookup_object('gcode').respond_info("Code:QDE_005_001; Message:"+ msg)
+        pheaters = self.printer.lookup_object('heaters')
+        heater = pheaters.lookup_heater(self.heater_name)
+        heater.set_temp(0)
+        self.last_target = 0
+        return
 
 def load_config_prefix(config):
     return HeaterCheck(config)

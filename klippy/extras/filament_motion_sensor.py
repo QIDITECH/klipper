@@ -16,9 +16,21 @@ class EncoderSensor:
         self.extruder_name = config.get('extruder')
         self.detection_length = config.getfloat(
                 'detection_length', 7., above=0.)
+        self.use_irq = config.getboolean('use_irq', False)
+        logging.info(f"motion use_irq?:{self.use_irq}")
+        self.debounce_us = 0
         # Configure pins
-        buttons = self.printer.load_object(config, 'buttons')
-        buttons.register_buttons([switch_pin], self.encoder_event)
+        if self.use_irq:
+            logging.info(f"motion use_irq1?:{self.use_irq}")
+            self.debounce_us = config.getint('debounce_us', 0)          
+            irq_button = config.printer.load_object(config, "buttons_irq")
+            #irq_button.register_buttons([switch_pin], callback=self.encoder_event, self.debounce_us)
+            irq_button.register_buttons([switch_pin], callback=self.encoder_event, debounce_us = self.debounce_us)
+        else:
+            logging.info(f"motion use_irq2?:{self.use_irq}")
+            buttons = self.printer.load_object(config, 'buttons')
+            buttons.register_buttons([switch_pin], self.encoder_event)
+
         # Get printer objects
         self.reactor = self.printer.get_reactor()
         self.runout_helper = filament_switch_sensor.RunoutHelper(config)
@@ -42,12 +54,27 @@ class EncoderSensor:
             'CLEAR_MOTION_DATA',
             self.cmd_CLEAR_MOTION_DATA
         )
+        self.motion_name = config.get_name().split()[1]
+        self.gcode.register_mux_command('SET_MOTION_DETECTION', "NAME", self.motion_name, self.cmd_SET_MOTION_DETECTION)
+        self.gcode.register_mux_command('GET_MOTION_DETECTION', "NAME", self.motion_name, self.cmd_GET_MOTION_DETECTION)
     def _update_filament_runout_pos(self, eventtime=None):
         if eventtime is None:
             eventtime = self.reactor.monotonic()
         self.filament_runout_pos = (
                 self._get_extruder_pos(eventtime) +
                 self.detection_length)
+    def cmd_SET_MOTION_DETECTION(self, gcmd):
+        d_l = gcmd.get_float('LENGTH', 0.)
+        if d_l <= 0:
+            self.gcode.respond_info("The LENGTH value is error")
+        else:
+            self.detection_length = d_l
+            self._update_filament_runout_pos()
+            self.gcode.respond_info("the detection_length has changed successsful. The will restart after next restart.")
+    
+    def cmd_GET_MOTION_DETECTION(self, gcmd):
+        self.gcode.respond_info("the detection_length is: " + str(self.detection_length))
+
     def cmd_CLEAR_MOTION_DATA(self, gcmd):
         self._update_filament_runout_pos()
     def _handle_ready(self):
@@ -75,12 +102,14 @@ class EncoderSensor:
                 extruder_pos < self.filament_runout_pos)
         return eventtime + CHECK_RUNOUT_TIMEOUT
     def encoder_event(self, eventtime, state):
+        #self.gcode.respond_info(f"motion state: {state} ")
         if self.extruder is not None:
             self._update_filament_runout_pos(eventtime)
             self.button_state = state
             # Check for filament insertion
             # Filament is always assumed to be present on an encoder event
             self.runout_helper.note_filament_present(True)
+            
 
 def load_config_prefix(config):
     return EncoderSensor(config)
