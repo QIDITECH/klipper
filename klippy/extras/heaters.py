@@ -241,7 +241,7 @@ class ControlPID:
         #    temp, read_time, temp_diff, temp_deriv, temp_err, temp_integ, co)
         bounded_co = max(0., min(self.heater_max_power, co))
         if self.heater.name == "chamber" and heater_bed.heater_bed_state != 2 and heater_bed.is_heater_bed == 1:
-            self.heater.set_pwm(read_time, 0.)
+            self.heater.set_pwm(read_time, bounded_co/2.0)
         else:
             self.heater.set_pwm(read_time, bounded_co)
         # Store state for next measurement
